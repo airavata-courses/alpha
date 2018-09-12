@@ -2,6 +2,9 @@ from flask import Flask, jsonify, request
 import requests
 import json
 
+# Connects to news.org API to get  latest news.
+# Requires news.org API key stored in config.json file
+
 app = Flask(__name__)
 url = "https://newsapi.org/v2"
 
@@ -15,7 +18,20 @@ def index():
 
 
 @app.route('/top_headlines', methods=['GET'])
-def get_country():
+def get_news():
+    """
+        Returns top 10 news from news.org API for the input country.
+        Default country is USA.
+
+        Output Format:
+        {
+            news: [
+                0: "news 1",
+                1: "news 2",
+                ...
+            ]
+        }
+    """
 
     country = request.args.get('country', 'us')
     r = requests.get(
