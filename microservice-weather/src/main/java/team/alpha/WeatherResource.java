@@ -1,0 +1,86 @@
+package team.alpha;
+
+import clover.com.google.gson.Gson;
+import team.alpha.model.*;
+import team.alpha.model.owm.OpenWeatherMapData;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneId;
+
+@RestController
+public class WeatherResource {
+
+    private HttpClient client = new DefaultHttpClient();
+    private Gson gson = new Gson();
+
+    @RequestMapping("/data")
+    public String getData(
+            @RequestParam(value = "lon", defaultValue = "" + Constants.BLOOMINGTON_LON) float lon,
+            @RequestParam(value = "lat", defaultValue = "" + Constants.BLOOMINGTON_LAT) float lat)
+            throws IOException {
+
+        HttpGet request = new HttpGet(Constants.WEATHER_API_URL + "?lat=" + lat + "&lon=" + lon + "&APPID=" + Constants.API_KEY + "&units=imperial");
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        HttpResponse response = client.execute(request);
+        int statusCode = response.getStatusLine().getStatusCode();
+
+        if (statusCode == HttpStatus.SC_OK) {
+            HttpEntity entity = response.getEntity();
+            String strResponse = entity != null ? EntityUtils.toString(entity) : null;
+            if (strResponse != null) {
+                OpenWeatherMapData openWeatherMapData = gson.fromJson(strResponse, OpenWeatherMapData.class);
+                WeatherData weatherData = extractWeatherData(openWeatherMapData);
+                return gson.toJson(weatherData);
+            }
+        }
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setCode(HttpStatus.SC_OK);
+        errorResponse.setMessage(Constants.ERROR_MSG);
+        return gson.toJson(errorResponse);
+    }
+
+    private WeatherData extractWeatherData(OpenWeatherMapData owmd) {
+        WeatherData weatherData = new WeatherData();
+
+        //set description
+        weatherData.setShortDesc(owmd.getWeather().get(0).getMain());
+        weatherData.setDescription(owmd.getWeather().get(0).getDescription());
+
+        //set temperature details
+        weatherData.setTemperature(Math.round(owmd.getMain().getTemp()));
+
+        //set humidity
+        weatherData.setHumidity(owmd.getMain().getHumidity());
+
+        //set wind details
+        Wind wind = new Wind();
+        wind.setSpeed(owmd.getWind().getSpeed());
+        wind.setDegree(owmd.getWind().getDeg());
+        weatherData.setWind(wind);
+
+        //set event details
+        Event event = new Event();
+        LocalTime sunrise = Instant.ofEpochSecond(owmd.getSys().getSunrise()).atZone(ZoneId.systemDefault()).toLocalTime();
+        LocalTime sunset = Instant.ofEpochSecond(owmd.getSys().getSunset()).atZone(ZoneId.systemDefault()).toLocalTime();
+        event.setSunrise(sunrise.getHour() + ":" + sunrise.getMinute());
+        event.setSunset(sunset.getHour() + ":" + sunset.getMinute());
+        weatherData.setEvent(event);
+
+        return weatherData;
+    }
+}
+
