@@ -3,11 +3,8 @@ node_js:
   - "stable"
 # command to install dependencies
 install:
-  - npm install --save-dev mocha
-  - npm install
+  - cd stock-ms && npm install --save-dev mocha
+  - cd stock-ms && npm install
 # command to run tests
 script:
   - cd stock-ms && npm test
-cache:
-  directories:
-  - "node_modules"
