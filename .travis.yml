@@ -6,7 +6,7 @@ install:
   - npm install
 # command to run tests
 script:
-  - npm test
+  - npm ms-stocks/test
 cache:
   directories:
   - "node_modules"
