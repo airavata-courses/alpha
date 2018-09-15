@@ -4,7 +4,7 @@ node_js:
 # command to install dependencies
 install:
   - cd stock-ms && npm install --save-dev mocha
-  - cd stock-ms && npm install
+  - npm install
 # command to run tests
 script:
-  - cd stock-ms && npm test
+  - npm test
