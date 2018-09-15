@@ -1,0 +1,11 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+cache:
+  directories:
+    - $HOME/.m2
+
+script:
+  - cd microservice-weather && mvn clean package
