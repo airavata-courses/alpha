@@ -28,4 +28,4 @@ def test_news():
     test_app.testing = True
     news = test_client.get('/top_headlines')
     data = json.loads(news.get_data(as_text=True))
-    assert data["success"] == 0
+    assert data["success"] == 1
