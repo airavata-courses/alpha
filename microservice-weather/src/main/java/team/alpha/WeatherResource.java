@@ -1,8 +1,6 @@
 package team.alpha;
 
 import clover.com.google.gson.Gson;
-import team.alpha.model.*;
-import team.alpha.model.owm.OpenWeatherMapData;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -11,9 +9,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import team.alpha.model.ErrorResponse;
+import team.alpha.model.Event;
+import team.alpha.model.WeatherData;
+import team.alpha.model.Wind;
+import team.alpha.model.owm.OpenWeatherMapData;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -26,6 +30,7 @@ public class WeatherResource {
     private HttpClient client = new DefaultHttpClient();
     private Gson gson = new Gson();
 
+	@CrossOrigin
     @RequestMapping("/data")
     public String getData(
             @RequestParam(value = "lon", defaultValue = "" + Constants.BLOOMINGTON_LON) float lon,
