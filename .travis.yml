@@ -3,6 +3,7 @@ node_js:
   - "stable"
 # command to install dependencies
 install:
+  - npm install --save-dev mocha
   - npm install
 # command to run tests
 script:
