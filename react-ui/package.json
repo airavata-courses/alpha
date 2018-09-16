@@ -5,7 +5,7 @@
   "dependencies": {
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
-    "react-scripts": "1.1.5",
+    "react-scripts": "^1.1.5",
     "socket.io": "^2.1.1"
   },
   "scripts": {
@@ -13,7 +13,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-    
   },
   "devDependencies": {
     "mocha": "^5.2.0"
