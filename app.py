@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 import requests
 import json
 from flask_cors import CORS
+import os
 
 # Connects to news.org API to get  latest news.
 # Requires news.org API key stored in config.json file
@@ -58,8 +59,5 @@ def flask_news(api_key):
 
 if __name__ == '__main__':
 
-    with open('config.json') as f:
-        config_json = json.load(f)
-
-    app = flask_news(config_json["news_api_key"])
+    app = flask_news(os.environ["NEWS_API_KEY"])
     app.run(host='0.0.0.0')
