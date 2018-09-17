@@ -1,12 +1,12 @@
-##To start Stocks Microservice, follow below steps.
+## To start Stocks Microservice, follow below steps.
 
-###1.	Check if node is installed-
+### 1.	Check if node is installed-
 
 ```
 node -v
 ```	
 
-###2.	After installing Node, run the below scripts to get the microservice running on your machine. Once its up and running, 
+### 2.	After installing Node, run the below scripts to get the microservice running on your machine. Once its up and running, 
 you can receive data from the microservice on port 8000
 
 ```
