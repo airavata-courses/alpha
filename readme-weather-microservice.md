@@ -12,7 +12,7 @@ Check if Maven is installed by executing the below command
 mvn -v
 ```
 After installing Java and Maven, run the below scripts to get the microservice running on your machine.
-Once its up and running, you can receive data from the microservice on port 8008 and /data path
+Once its up and running, you can receive data from the microservice on port 9102 and /data path
 ```
 git clone https://github.com/airavata-courses/alpha --branch=ms-weather
 cd alpha/microservice-weather
