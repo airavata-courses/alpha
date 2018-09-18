@@ -20,7 +20,5 @@ you can receive data from the microservice on port 8000
 ```
 git clone https://github.com/airavata-courses/alpha --branch=ms-stocks
 cd alpha/stock-ms
-npm install
-npm install --save react-scripts
 node server.js
 ```
