@@ -9,7 +9,7 @@ class Weather extends Component {
             isLoaded: false,
             weather: {}
         }
-        fetch("http://localhost:8008/data")
+        fetch("http://localhost:9102/data")
         .then(res => res.json())
         .then(
           (result) => {
