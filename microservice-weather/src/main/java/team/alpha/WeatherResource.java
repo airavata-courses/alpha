@@ -30,32 +30,56 @@ public class WeatherResource {
     private HttpClient client = new DefaultHttpClient();
     private Gson gson = new Gson();
 
-	@CrossOrigin
+    @CrossOrigin
     @RequestMapping("/data")
-    public String getData(
+    String getData(
             @RequestParam(value = "lon", defaultValue = "" + Constants.BLOOMINGTON_LON) float lon,
-            @RequestParam(value = "lat", defaultValue = "" + Constants.BLOOMINGTON_LAT) float lat)
-            throws IOException {
+            @RequestParam(value = "lat", defaultValue = "" + Constants.BLOOMINGTON_LAT) float lat) {
 
-        HttpGet request = new HttpGet(Constants.WEATHER_API_URL + "?lat=" + lat + "&lon=" + lon + "&APPID=" + Constants.API_KEY + "&units=imperial");
-        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        HttpResponse response = client.execute(request);
-        int statusCode = response.getStatusLine().getStatusCode();
+        try {
+            String strResponse = getDataFromThirdParty(lon, lat);
 
-        if (statusCode == HttpStatus.SC_OK) {
-            HttpEntity entity = response.getEntity();
-            String strResponse = entity != null ? EntityUtils.toString(entity) : null;
-            if (strResponse != null) {
-                OpenWeatherMapData openWeatherMapData = gson.fromJson(strResponse, OpenWeatherMapData.class);
-                WeatherData weatherData = extractWeatherData(openWeatherMapData);
-                return gson.toJson(weatherData);
+            if (strResponse == null) {
+                return getErrorResponse();
             }
+
+            OpenWeatherMapData openWeatherMapData = gson.fromJson(strResponse, OpenWeatherMapData.class);
+            WeatherData weatherData = extractWeatherData(openWeatherMapData);
+            return gson.toJson(weatherData);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getErrorResponse();
         }
 
+    }
+
+    private String getErrorResponse() {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setCode(HttpStatus.SC_OK);
         errorResponse.setMessage(Constants.ERROR_MSG);
         return gson.toJson(errorResponse);
+    }
+
+    String getDataFromThirdParty(float lon, float lat) {
+
+        String strResponse = null;
+        try {
+            HttpGet request = new HttpGet(Constants.WEATHER_API_URL + "?lat=" + lat + "&lon=" + lon + "&APPID=" + Constants.API_KEY + "&units=imperial");
+            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            HttpResponse response = client.execute(request);
+            int statusCode = response.getStatusLine().getStatusCode();
+
+            if (statusCode == HttpStatus.SC_OK) {
+                HttpEntity entity = response.getEntity();
+                strResponse = entity != null ? EntityUtils.toString(entity) : null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return strResponse;
     }
 
     private WeatherData extractWeatherData(OpenWeatherMapData owmd) {
