@@ -40,6 +40,8 @@
   - name: "Install npm packages for Node"
     npm:
       path: "{{playbook_dir}}/stocks/stock-ms" 
+  - name: "Install react"
+    shell: npm install -g create-react-app
   - name: "unset pythonpath"
     shell: unset PYTHONPATH
   - name: "Install react-scripts"
