@@ -59,5 +59,9 @@ def flask_news(api_key):
 
 if __name__ == '__main__':
 
-    app = flask_news(os.environ["NEWS_API_KEY"])
-    app.run(host='0.0.0.0')
+    try:
+        app = flask_news(os.environ["NEWS_API_KEY"])
+        app.run(host='0.0.0.0')
+
+    except KeyError as e:
+        print("News API key is not set in Environment Variables")
