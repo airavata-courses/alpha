@@ -2,6 +2,30 @@ import React, { Component } from 'react';
 
 class Weather extends Component {
 
+    getWeather(){
+        fetch("http://localhost:9102/data")
+        .then(res => {
+            if(res.ok){
+                return res.json();  
+            }
+            else {
+                this.setState({
+                    isLoaded: false,
+                    error: "Error fetching data"
+                });
+            }
+        })
+        .then(
+          (result) => {
+            this.setState({
+              isLoaded: true,
+              weather: result,
+              error: 0
+            });
+          }
+        )
+    }
+
     constructor(props){
         super(props);
         this.state = {
@@ -9,17 +33,8 @@ class Weather extends Component {
             isLoaded: false,
             weather: {}
         }
-        fetch("http://localhost:9102/data")
-        .then(res => res.json())
-        .then(
-          (result) => {
-              console.log(result)
-            this.setState({
-              isLoaded: true,
-              weather: result
-            });
-          }
-        )
+
+        this.getWeather();
     }
 
     render() {
@@ -31,9 +46,8 @@ class Weather extends Component {
           return <div>Loading...</div>;
         }
         else {
-        	console.log(weather)
             return (
-            	<div>
+                <div style = {{"border": "2px solid black", "width": "70%", "margin":"auto"}}>
                 	<h2>{weather.shortDesc}</h2>
                 	<p>Description: {weather.description}</p>
                 	<p>Temperature: {weather.temperature} F</p>
@@ -43,6 +57,10 @@ class Weather extends Component {
                 </div>
             );
         }
+    }
+
+    componentDidMount(){
+        setInterval(this.getWeather, 300000);
     }
 }
 
