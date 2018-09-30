@@ -1,10 +1,10 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 import requests
 import json
 from flask_cors import CORS
 import os
 
-# Connects to news.org API to get  latest news.
+# Connects to news.org API to get latest news.
 # Requires news.org API key stored in config.json file
 
 
@@ -36,23 +36,31 @@ def flask_news(api_key):
             }
         """
 
-        country = request.args.get('country', 'us')
-        r = requests.get(
-            url + "/top-headlines",
-            headers={"X-Api-Key": api_key},
-            params={"country": country, "pageSize": 10}
-        )
+        try:
+            country = request.args.get('country', 'us')
+            r = requests.get(
+                url + "/top-headlines",
+                headers={"X-Api-Key": api_key},
+                params={"country": country, "pageSize": 10}
+            )
 
-        if r.status_code == 200:
-            result = {"success": 1, "news": []}
-            for news in r.json()["articles"]:
-                result["news"].append(news["title"])
-            return jsonify(result)
+            if r.status_code == 200:
+                result = {"success": 1, "news": []}
+                for news in r.json()["articles"]:
+                    result["news"].append(news["title"])
+                return jsonify(result)
 
-        return jsonify({
-            "success": 0,
-            "error": "Unable to fetch news"
-        })
+            response = app.response_class(
+                response=json.dumps({"success": 0, "error": "Unable to fetch data"}),
+                status=r.status_code,
+                mimetype='application/json'
+            )
+
+            return response
+
+        except Exception as e:
+            print(str(e))
+            abort(500)
 
     return app
 
@@ -64,4 +72,4 @@ if __name__ == '__main__':
         app.run(host='0.0.0.0')
 
     except KeyError as e:
-        print("News API key is not set in Environment Variables")
+        print("News API key is not set in Environment Variable")
