@@ -8,4 +8,4 @@ cache:
     - $HOME/.m2
 
 script:
-  - cd microservice-weather && mvn clean package
+  - mvn clean package
