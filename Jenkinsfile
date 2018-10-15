@@ -1,6 +1,8 @@
 pipeline {
   agent any
- 
+ environment {
+       WEATHER_API_KEY    = credentials('WEATHER_API_KEY')
+    }
 tools {
         maven 'maven'
         jdk 'jdk'
