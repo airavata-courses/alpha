@@ -18,7 +18,6 @@ class DatabaseResource {
     private Gson gson = new Gson();
     private Connection db;
     private PreparedStatement loginQuery;
-    private PreparedStatement userPrefQuery;
     private CallableStatement signupProc;
 
 
@@ -39,7 +38,6 @@ class DatabaseResource {
 
     private void createPreparedStatements() throws SQLException {
         loginQuery = db.prepareStatement("select userid from userinfo where username = ? and password = ?");
-        userPrefQuery = db.prepareStatement("select city, country, company, get_news_alerts, get_weather_alerts from userpref where userid = ?");
         signupProc = db.prepareCall("{ ? = call create_user(?,?,?,?,?,?,?) }");
         signupProc.registerOutParameter(1, Types.INTEGER);
     }
@@ -74,44 +72,6 @@ class DatabaseResource {
         }
 
         return userId;
-    }
-
-    @CrossOrigin
-    @RequestMapping("/userpref")
-    String getUserPref(
-            @RequestParam(value = "userid") int userId) {
-
-        String response;
-
-        try {
-            userPrefQuery.setInt(1, userId);
-
-            ResultSet rs = userPrefQuery.executeQuery();
-
-            UserPreferences userPreferences = null;
-            while (rs.next()) {
-                userPreferences = new UserPreferences();
-                userPreferences.setCity(rs.getString(1));
-                userPreferences.setCountry(rs.getString(2));
-                userPreferences.setCompany(rs.getString(3));
-                userPreferences.setSubscribedToNewsAlerts(rs.getBoolean(4));
-                userPreferences.setSubscribedToWeatherAlerts(rs.getBoolean(5));
-            }
-
-            rs.close();
-            userPrefQuery.close();
-
-            if (userPreferences == null) {
-                return getErrorResponse(Constants.MSG_USER_PREF_NOT_AVAILABLE);
-            }
-
-            return gson.toJson(userPreferences);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return getErrorResponse(Constants.MSG_FAILED_TO_FETCH_USER_PREF);
-        }
-
     }
 
     @CrossOrigin

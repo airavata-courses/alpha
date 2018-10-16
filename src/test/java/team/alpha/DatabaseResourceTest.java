@@ -39,7 +39,6 @@ public class DatabaseResourceTest {
         setRandomValues();
         int userId = signup();
         login(userId);
-        getUserPref(userId);
 
     }
 
@@ -52,17 +51,6 @@ public class DatabaseResourceTest {
     private void setRandomValues() {
         username = RandomStringUtils.randomAlphabetic(16);
         password = RandomStringUtils.randomAlphanumeric(16);
-    }
-
-    private void getUserPref(int userId) {
-        Assert.assertNotNull(databaseResource);
-        String userPreferences = databaseResource.getUserPref(userId);
-        UserPreferences userPref = gson.fromJson(userPreferences, UserPreferences.class);
-        Assert.assertEquals(city, userPref.getCity());
-        Assert.assertEquals(country, userPref.getCountry());
-        Assert.assertEquals(company, userPref.getCompany());
-        Assert.assertEquals(subscribedToNewsAlerts, userPref.isSubscribedToNewsAlerts());
-        Assert.assertEquals(subscribedToWeatherAlerts, userPref.isSubscribedToWeatherAlerts());
     }
 
     private int signup() {

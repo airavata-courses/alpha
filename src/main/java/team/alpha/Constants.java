@@ -27,9 +27,7 @@ public class Constants {
     public static final String DB_URL = "jdbc:postgresql://" +  DB_HOSTURL +  ":" + DB_PORT + "/activedb";
 
     //error messages
-    public static final String MSG_USER_PREF_NOT_AVAILABLE = "Widget preferences for this user were not found";
     public static final String MSG_INVALID_CREDENTIAL = "Either username or password is invalid";
-    public static final String MSG_FAILED_TO_FETCH_USER_PREF = "Error while fetching user preferences";
     public static final String MSG_FAILED_TO_FETCH_USER = "Error while fetching user data";
     public static final String MSG_FAILED_TO_CREATE_USER = "Error while creating user data";
 
