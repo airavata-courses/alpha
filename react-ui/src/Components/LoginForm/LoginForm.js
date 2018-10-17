@@ -43,9 +43,9 @@ class LoginForm extends Component {
             value={password}
           />
           <input type="submit" value="Login" />
-
+          {this.props.city}
           {isLoginPending && <div>Please wait...</div>}
-          {isLoginSuccess && <Redirect to="/weather" />}
+          {isLoginSuccess && <Redirect to="/App" />}
           {loginError && <div>{loginError.message}</div>}
         </form>
         <button
@@ -66,10 +66,16 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log("state", state);
   return {
     isLoginPending: state.isLoginPending,
     isLoginSuccess: state.isLoginSuccess,
-    loginError: state.loginError
+    loginError: state.loginError,
+    city: state.userPreferences.city,
+    country: state.userPreferences.country,
+    company: state.userPreferences.company,
+    subscribedToNewsAlerts: state.userPreferences.subscribedToNewsAlerts,
+    subscribedToWeatherAlerts: state.userPreferences.subscribedToWeatherAlerts
   };
 };
 

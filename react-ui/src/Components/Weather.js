@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
 class Weather extends Component {
   getWeather() {
@@ -31,10 +32,12 @@ class Weather extends Component {
     };
 
     this.getWeather = this.getWeather.bind(this);
+    this.getWeather();
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   render() {
+    console.log("inside weather");
     const { error, isLoaded, weather } = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -64,4 +67,15 @@ class Weather extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  console.log("state", state);
+  return {
+    city: state.userPreferences.city,
+    country: state.userPreferences.country,
+    company: state.userPreferences.company,
+    subscribedToNewsAlerts: state.userPreferences.subscribedToNewsAlerts
+  };
+};
+
+Weather = connect(mapStateToProps)(Weather);
 export { Weather };

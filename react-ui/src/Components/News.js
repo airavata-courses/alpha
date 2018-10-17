@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
 class News extends Component {
   getNews() {
@@ -31,6 +32,7 @@ class News extends Component {
     };
 
     this.getNews = this.getNews.bind(this);
+    this.getNews();
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
@@ -60,5 +62,15 @@ class News extends Component {
     setInterval(() => this.getNews(), 300000);
   }
 }
+const mapStateToProps = state => {
+  console.log("state", state);
+  return {
+    city: state.userPreferences.city,
+    country: state.userPreferences.country,
+    company: state.userPreferences.company,
+    subscribedToNewsAlerts: state.userPreferences.subscribedToNewsAlerts
+  };
+};
 
+News = connect(mapStateToProps)(News);
 export { News };
