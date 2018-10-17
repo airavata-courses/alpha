@@ -2,13 +2,13 @@ package team.alpha;
 
 import clover.com.google.gson.Gson;
 import clover.org.apache.commons.lang.RandomStringUtils;
-import clover.org.apache.commons.lang.math.RandomUtils;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import team.alpha.model.Credentials;
+import team.alpha.model.SignupForm;
 import team.alpha.model.UserPreferences;
-import team.alpha.model.UserSignupForm;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DatabaseResourceTest {
@@ -39,13 +39,15 @@ public class DatabaseResourceTest {
         setRandomValues();
         int userId = signup();
         login(userId);
-
     }
 
     private void login(int expectedUserId) {
         Assert.assertNotNull(databaseResource);
-        int userId = databaseResource.login(username, password);
-        Assert.assertEquals(expectedUserId, userId);
+        Credentials credentials = new Credentials();
+        credentials.setUsername(username);
+        credentials.setPassword(password);
+        String response = databaseResource.login(credentials);
+        Assert.assertFalse(response.equalsIgnoreCase(Constants.MSG_FAILED_TO_FETCH_USER));
     }
 
     private void setRandomValues() {
@@ -55,9 +57,10 @@ public class DatabaseResourceTest {
 
     private int signup() {
         Assert.assertNotNull(databaseResource);
-        UserSignupForm userSignupForm = new UserSignupForm();
-        userSignupForm.setUsername(username);
-        userSignupForm.setPassword(password);
+        SignupForm signupForm = new SignupForm();
+        signupForm.setCredentials(new Credentials());
+        signupForm.getCredentials().setUsername(username);
+        signupForm.getCredentials().setPassword(password);
 
         UserPreferences userPreferences = new UserPreferences();
         userPreferences.setCity(city);
@@ -65,10 +68,11 @@ public class DatabaseResourceTest {
         userPreferences.setCompany(company);
         userPreferences.setSubscribedToNewsAlerts(subscribedToNewsAlerts);
         userPreferences.setSubscribedToWeatherAlerts(subscribedToWeatherAlerts);
-        userSignupForm.setUserPreferences(userPreferences);
+        signupForm.setUserPreferences(userPreferences);
 
-        String userId = databaseResource.signup(gson.toJson(userSignupForm));
-        Assert.assertFalse(userId.equalsIgnoreCase(Constants.MSG_FAILED_TO_CREATE_USER));
+        String userId = databaseResource.signup(signupForm);
+        Assert.assertFalse(userId.contains(Constants.MSG_FAILED_TO_CREATE_USER));
+
         return Integer.parseInt(userId);
     }
 

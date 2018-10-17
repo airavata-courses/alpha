@@ -30,5 +30,6 @@ public class Constants {
     public static final String MSG_INVALID_CREDENTIAL = "Either username or password is invalid";
     public static final String MSG_FAILED_TO_FETCH_USER = "Error while fetching user data";
     public static final String MSG_FAILED_TO_CREATE_USER = "Error while creating user data";
+    public static final String MSG_USER_ALREADY_EXISTS = "That username has been taken. Please try another one.";
 
 }
