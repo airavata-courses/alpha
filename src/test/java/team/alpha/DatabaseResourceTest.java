@@ -1,22 +1,18 @@
 package team.alpha;
 
-import clover.com.google.gson.Gson;
 import clover.org.apache.commons.lang.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import team.alpha.model.Credentials;
-import team.alpha.model.SignupForm;
-import team.alpha.model.UserPreferences;
+import team.alpha.model.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DatabaseResourceTest {
 
     private DatabaseResource databaseResource;
-    private Gson gson = new Gson();
-    private String username;
-    private String password;
+    private String username = RandomStringUtils.randomAlphabetic(16);
+    private String password= RandomStringUtils.randomAlphanumeric(16);
     private final String city = "Bloomington, IN";
     private final String country = "US";
     private final String company = "Apple";
@@ -36,26 +32,13 @@ public class DatabaseResourceTest {
     @Test
     public void test2DatabaseResource() {
         databaseResource = new DatabaseResource();
-        setRandomValues();
-        int userId = signup();
-        login(userId);
+        checkSignupSucceeds();
+        checkSignupFails();
+        checkLoginSucceeds();
+        checkLoginFails();
     }
 
-    private void login(int expectedUserId) {
-        Assert.assertNotNull(databaseResource);
-        Credentials credentials = new Credentials();
-        credentials.setUsername(username);
-        credentials.setPassword(password);
-        String response = databaseResource.login(credentials);
-        Assert.assertFalse(response.equalsIgnoreCase(Constants.MSG_FAILED_TO_FETCH_USER));
-    }
-
-    private void setRandomValues() {
-        username = RandomStringUtils.randomAlphabetic(16);
-        password = RandomStringUtils.randomAlphanumeric(16);
-    }
-
-    private int signup() {
+    private void checkSignupSucceeds() {
         Assert.assertNotNull(databaseResource);
         SignupForm signupForm = new SignupForm();
         signupForm.setCredentials(new Credentials());
@@ -70,10 +53,45 @@ public class DatabaseResourceTest {
         userPreferences.setSubscribedToWeatherAlerts(subscribedToWeatherAlerts);
         signupForm.setUserPreferences(userPreferences);
 
-        String userId = databaseResource.signup(signupForm);
-        Assert.assertFalse(userId.contains(Constants.MSG_FAILED_TO_CREATE_USER));
+        Response response = databaseResource.signup(signupForm);
+        Assert.assertEquals(response.getStatus(), ResponseStatus.USER_CREATED);
+    }
 
-        return Integer.parseInt(userId);
+    private void checkSignupFails() {
+        Assert.assertNotNull(databaseResource);
+        SignupForm signupForm = new SignupForm();
+        signupForm.setCredentials(new Credentials());
+        signupForm.getCredentials().setUsername(username);
+        signupForm.getCredentials().setPassword(password);
+
+        UserPreferences userPreferences = new UserPreferences();
+        userPreferences.setCity(city);
+        userPreferences.setCountry(country);
+        userPreferences.setCompany(company);
+        userPreferences.setSubscribedToNewsAlerts(subscribedToNewsAlerts);
+        userPreferences.setSubscribedToWeatherAlerts(subscribedToWeatherAlerts);
+        signupForm.setUserPreferences(userPreferences);
+
+        Response response = databaseResource.signup(signupForm);
+        Assert.assertEquals(response.getStatus(), ResponseStatus.USERNAME_CONFLICT);
+    }
+
+    private void checkLoginSucceeds() {
+        Assert.assertNotNull(databaseResource);
+        Credentials credentials = new Credentials();
+        credentials.setUsername(username);
+        credentials.setPassword(password);
+        Response response = databaseResource.login(credentials);
+        Assert.assertEquals(response.getStatus(), ResponseStatus.OK);
+    }
+
+    private void checkLoginFails() {
+        Assert.assertNotNull(databaseResource);
+        Credentials credentials = new Credentials();
+        credentials.setUsername(username);
+        credentials.setPassword(RandomStringUtils.randomAlphanumeric(16));
+        Response response = databaseResource.login(credentials);
+        Assert.assertEquals(response.getStatus(), ResponseStatus.USER_UNAUTHORIZED);
     }
 
     @Override

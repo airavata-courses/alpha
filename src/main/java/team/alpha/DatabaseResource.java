@@ -5,10 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import team.alpha.model.Credentials;
-import team.alpha.model.ErrorResponse;
-import team.alpha.model.SignupForm;
-import team.alpha.model.UserPreferences;
+import team.alpha.model.*;
 
 import java.sql.*;
 import java.util.Properties;
@@ -45,7 +42,7 @@ class DatabaseResource {
 
     @CrossOrigin
     @RequestMapping("/login")
-    String login(@RequestBody Credentials credentials) {
+    Response login(@RequestBody Credentials credentials) {
         int userId = -1;
         UserPreferences userPreferences = new UserPreferences();
 
@@ -67,20 +64,20 @@ class DatabaseResource {
             }
 
             if (userId == -1) {
-                return getErrorResponse(Constants.MSG_INVALID_CREDENTIAL);
+                return new Response(ResponseStatus.USER_UNAUTHORIZED, Constants.MSG_INVALID_CREDENTIALS);
             }
 
-            return gson.toJson(userPreferences);
+            return new Response(ResponseStatus.OK, gson.toJson(userPreferences));
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return getErrorResponse(Constants.MSG_FAILED_TO_FETCH_USER);
+            return new Response(ResponseStatus.SERVER_ERROR, Constants.MSG_FAILED_TO_FETCH_USER);
         }
     }
 
     @CrossOrigin
     @RequestMapping("/signup")
-    String signup(@RequestBody SignupForm signupForm) {
+    Response signup(@RequestBody SignupForm signupForm) {
         String response = "false";
 
         try {
@@ -98,22 +95,15 @@ class DatabaseResource {
             int userId = signupProc.getInt(1);
 
             if (userId == 0) {
-                return getErrorResponse(Constants.MSG_USER_ALREADY_EXISTS);
+                return new Response(ResponseStatus.USERNAME_CONFLICT, Constants.MSG_USER_ALREADY_EXISTS);
             }
 
-            return "" + userId;
+            return new Response(ResponseStatus.USER_CREATED, userId + "");
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return getErrorResponse(Constants.MSG_FAILED_TO_CREATE_USER);
+            return new Response(ResponseStatus.SERVER_ERROR, Constants.MSG_FAILED_TO_CREATE_USER);
         }
-    }
-
-    private String getErrorResponse(String msg) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setCode(Constants.STATUS_OK);
-        errorResponse.setMessage(msg);
-        return gson.toJson(errorResponse);
     }
 
 }
