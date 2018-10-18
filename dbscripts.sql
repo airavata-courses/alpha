@@ -59,5 +59,9 @@ end
 $$ language plpgsql;
 
 insert into geoloc values ('Bloomington, IN', -86.60, 39.17);
+select * from create_user('username','password','Bloomington, IN','US','Apple', false, false);
+select * from login_user('username','password');
+delete from userpref;
+delete from userinfo;
 
 \connect postgres;
