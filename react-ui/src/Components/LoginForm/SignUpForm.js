@@ -122,38 +122,37 @@ class SignUpForm extends React.Component {
 
         <div className="form-group">
           <label className="control-label">City</label>
-          <select
-            className="form-control"
-            type="text"
-            onChange={this.onChange}
+          <input
             value={this.state.city}
-          >
-            <option value="Bloomington, IN">Bloomington, IN</option>
-            <option value="New York, NY">New York, NY</option>
-            <option value="Los Angeles, CA">Los Angeles, CA</option>
-            <option value="Houston, TX">Houston, TX</option>
-            <option value="Chicago, IL">Chicago, IL</option>
-          </select>
+            onChange={this.onChange}
+            type="text"
+            name="city"
+            className="form-control"
+          />
         </div>
         <div className="form-group">
           <label className="control-label">Country</label>
-          <select
-            className="form-control"
-            type="text"
-            onChange={this.onChange}
-            value={this.state.country}
-          >
-            <option value="US">US</option>
-            <option value="AU">AU</option>
-            <option value="CA">CA</option>
-            <option value="JP">JP</option>
+          <select>
+            <option value={this.state.country}>US</option>
+            <option value={this.state.country}>AU</option>
+            <option selected value={this.state.country}>
+              JP
+            </option>
           </select>
+          <input
+            value="cv"
+            onChange={this.onChange}
+            type="text"
+            name="country"
+            className="form-control"
+          />
         </div>
+
         <div className="form-group">
           <label className="control-label">Company</label>
           <input
-            onChange={this.onChange}
             value={this.state.company}
+            onChange={this.onChange}
             type="text"
             name="company"
             className="form-control"

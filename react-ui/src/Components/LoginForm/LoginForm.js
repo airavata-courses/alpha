@@ -25,9 +25,14 @@ class LoginForm extends Component {
     let { isLoginPending, isLoginSuccess, loginError } = this.props;
 
     return (
-      <div className="login-form-wrapper" onSubmit={this.onSubmit}>
+      <div
+        className="login-form-wrapper"
+        style={{ width: "50%", margin: "auto" }}
+        onSubmit={this.onSubmit}
+      >
+        <h1>Login</h1>
         <form name="loginForm">
-          <label>Username:</label>
+          <label style={{ padding: "10px" }}>Username:</label>
           <input
             type="text"
             name="username"
@@ -35,18 +40,20 @@ class LoginForm extends Component {
             value={username}
           />
           <br />
-          <label>Password:</label>
+          <label style={{ padding: "10px" }}>Password:</label>
           <input
             type="password"
             name="password"
             onChange={e => this.setState({ password: e.target.value })}
             value={password}
+            style={{ margin: "10px" }}
           />
+          <br />
           <input type="submit" value="Login" />
-          {this.props.city}
+
           {isLoginPending && <div>Please wait...</div>}
           {isLoginSuccess && <Redirect to="/App" />}
-          {loginError && <div>{loginError.message}</div>}
+          {loginError && <div>{loginError}</div>}
         </form>
         <button
           onClick={() => {

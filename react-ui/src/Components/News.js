@@ -3,7 +3,9 @@ import { connect } from "react-redux";
 
 class News extends Component {
   getNews() {
-    fetch("http://localhost:5000/top_headlines")
+    let { country, city } = this.props;
+    console.log("inside news" + country);
+    fetch("http://localhost:5000/top_headlines?country=" + country)
       .then(res => {
         if (res.ok) {
           return res.json();

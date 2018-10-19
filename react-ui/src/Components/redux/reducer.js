@@ -6,7 +6,7 @@ const SET_USER_PREFERENCE = "SET_USER_PREFERENCE";
 //set state
 export function login(username, password) {
   return dispatch => {
-    fetch("https://jsonplaceholder.typicode.com/posts.login", {
+    fetch("http://149.161.203.120:9101/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -15,17 +15,24 @@ export function login(username, password) {
     })
       .then(res => res.json())
       .then(result => {
-        if (result) {
+        if (result.status === 200) {
+          console.log(result);
+          let message = JSON.parse(result.message);
+          console.log(message.city);
           dispatch(setLoginSuccess(true));
           dispatch(
             setUserPreference({
-              city: "Bloomington, IN",
-              country: "US",
-              company: "Apple",
-              subscribedToNewsAlerts: false,
-              subscribedToWeatherAlerts: true
+              city: message.city,
+              country: message.country,
+              company: message.company,
+              subscribedToNewsAlerts: message.subscribedToNewsAlerts,
+              subscribedToWeatherAlerts: message.subscribedToWeatherAlerts
             })
           );
+        } else if (result.status === 401) {
+          dispatch(setLoginError("Invalid User Credentials"));
+        } else if (result.status === 500) {
+          dispatch(setLoginError("Server Error"));
         }
       });
   };
@@ -67,36 +74,32 @@ dict["sidpath@iu.edu"] = "sidpath";
 dict["hardik@iu.edu"] = "hardik";
 
 //check credentials befoe logging in
-function checkCredentials(username, password) {
-  fetch("https://jsonplaceholder.typicode.com/posts.login", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ username: username, password: password })
-  })
-    .then(res => res.json())
-    .then(result => {
-      return result;
-    });
-}
+// function checkCredentials(username, password) {
+//   fetch("https://149.161.203.120:9101", {
+//     method: "post",
+//     headers: {
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify({ username: username, password: password })
+//   })
+//     .then(res => res.json())
+//     .then(result => {
+//       return result;
+//     });
+// }
 
 // login check and then callback
-function callLoginApi(username, password, callback) {
-  setTimeout(() => {
-    //get user pref
-    var jsonobj = {
-      username: "adhage@iu.edu",
-      password: "adhage"
-    };
-    //jsonobj = checkCredentials(username, password);
-    if (jsonobj !== -1) {
-      return callback(null);
-    } else {
-      return callback(new Error("Invalid username and password"));
-    }
-  }, 1000);
-}
+// function callLoginApi(username, password, callback) {
+//   setTimeout(() => {
+//     //get user pref
+//     //jsonobj = checkCredentials(username, password);
+//     if (jsonobj !== -1) {
+//       return callback(null);
+//     } else {
+//       return callback(new Error("Invalid username and password"));
+//     }
+//   }, 1000);
+// }
 
 const initialState = {
   isLoginSuccess: false,
@@ -107,7 +110,7 @@ const initialState = {
     country: "",
     company: "",
     subscribedToNewsAlerts: false,
-    subscribedToWeatherAlerts: true
+    subscribedToWeatherAlerts: false
   }
 };
 
