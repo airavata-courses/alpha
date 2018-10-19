@@ -124,7 +124,7 @@ class SignUpForm extends React.Component {
           <label className="control-label">City</label>
           <select
             className="form-control"
-            type="text"
+            name="city"
             onChange={this.onChange}
             value={this.state.city}
           >
@@ -139,7 +139,7 @@ class SignUpForm extends React.Component {
           <label className="control-label">Country</label>
           <select
             className="form-control"
-            type="text"
+            name="country"
             onChange={this.onChange}
             value={this.state.country}
           >

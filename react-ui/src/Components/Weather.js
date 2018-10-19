@@ -77,5 +77,8 @@ const mapStateToProps = state => {
   };
 };
 
-Weather = connect(mapStateToProps)(Weather);
+Weather = connect(
+  mapStateToProps,
+  () => {}
+)(Weather);
 export { Weather };
