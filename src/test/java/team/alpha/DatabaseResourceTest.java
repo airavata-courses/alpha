@@ -94,16 +94,4 @@ public class DatabaseResourceTest {
         Assert.assertEquals(response.getStatus(), ResponseStatus.USER_UNAUTHORIZED);
     }
 
-    @Override
-    public String toString() {
-        return "DatabaseResourceTest{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", company='" + company + '\'' +
-                ", subscribedToNewsAlerts=" + subscribedToNewsAlerts +
-                ", subscribedToWeatherAlerts=" + subscribedToWeatherAlerts +
-                '}';
-    }
 }

@@ -17,10 +17,14 @@ create table geoloc(
 	lat float
 );
 
+create table countries(
+	country varchar(30) primary key
+);
+
 create table userpref(
 	userid int primary key references userinfo(userid),
 	city varchar(30) references geoloc(city),
-	country varchar(30),
+	country varchar(30) references countries(country),
 	company varchar(30),
 	get_news_alerts boolean,
 	get_weather_alerts boolean
@@ -58,7 +62,15 @@ begin
 end
 $$ language plpgsql;
 
-insert into geoloc values ('Bloomington, IN', -86.60, 39.17);
+insert into geoloc (city, lat, lon) values 
+	('Bloomington, IN', 39.167,-86.53),
+	('New York, NY', 40.67,-73.96),
+	('Los Angeles, CA', 34.055, -118.397),
+	('Chicago, IL', 41.875, -87.655),
+	('Houston, TX', 29.764,-95.387);
+
+insert into countries values ('US'), ('CA'), ('AU'), ('JP');
+
 select * from create_user('username','password','Bloomington, IN','US','Apple', false, false);
 select * from login_user('username','password');
 delete from userpref;
