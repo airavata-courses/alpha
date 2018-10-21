@@ -6,12 +6,12 @@ import java.util.Properties;
 
 public class Constants {
 
-    private static Properties properties = new Properties();
+    private static Properties configProperties = new Properties();
 
     static {
         try {
             InputStream inputStream = Constants.class.getResourceAsStream("/config.properties");
-            properties.load(inputStream);
+            configProperties.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -21,10 +21,11 @@ public class Constants {
         //cant be instantiated
     }
 
-    public static final int STATUS_OK = 200;
-    public static final String DB_HOSTURL = properties.getProperty("dbserver.hosturl");
-    public static final String DB_PORT = properties.getProperty("dbserver.port");
-    public static final String DB_URL = "jdbc:postgresql://" +  DB_HOSTURL +  ":" + DB_PORT + "/activedb";
+    public static final String DB_HOSTURL = configProperties.getProperty("db.hosturl");
+    public static final String DB_PORT = configProperties.getProperty("db.port");
+    public static final String DB_USER = configProperties.getProperty("db.user");
+    public static final String DB_PASSWORD = configProperties.getProperty("db.password");
+    public static final String DB_URL = "jdbc:postgresql://" + DB_HOSTURL + ":" + DB_PORT + "/activedb?user=" + DB_USER + "&password=" + DB_PASSWORD;
 
     //error messages
     public static final String MSG_INVALID_CREDENTIALS = "Either username or password is invalid";
