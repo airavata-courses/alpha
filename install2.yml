@@ -1,0 +1,58 @@
+---
+- hosts: localhost
+  tasks:
+  - git:
+      repo: "https://github.com/airavata-courses/alpha.git"
+      dest: "{{playbook_dir}}/stocks"
+      version: ms-stocks 
+      force: yes
+  - git:
+      repo: "https://github.com/airavata-courses/alpha.git"
+      dest: "{{playbook_dir}}/react-ui"
+      version: react-ui
+      force: yes
+  - git:
+      repo: "https://github.com/airavata-courses/alpha.git"
+      dest: "{{playbook_dir}}/news"
+      version: ms-news
+      force: yes
+  - git:
+      repo: "https://github.com/airavata-courses/alpha.git"
+      dest: "{{playbook_dir}}/weather"
+      version: ms-weather
+      force: yes
+  - name: "Install Maven"
+    homebrew:
+      name: maven
+      state: installed
+      when: ansible_os_family == 'Darwin'
+  - name: name: "Install Maven"
+    apt: 
+      name: maven
+      state: installed
+      when: ansible_os_family == 'Debian'
+  - name: "Install node"
+    homebrew:
+      name: node
+      state: installed
+      when: ansible_os_family == 'Darwin'
+  - name: "Install node"
+    apt:
+      name: node
+      state: installed
+      when: ansible_os_family == 'Debian'
+  - name: "Install npm packages for Node"
+    npm:
+      path: "{{playbook_dir}}/stocks/stock-ms" 
+  - name: "unset pythonpath"
+    shell: unset PYTHONPATH
+  - name: "Install react-scripts"
+    shell: cd {{playbook_dir}}/react-ui/react-ui && npm install --save react-scripts 
+  - name: "Start stocks api"
+    shell: cd {{playbook_dir}}/stocks/stock-ms && node server.js >/dev/null 2>&1 &
+  - name: "Start weather"
+    shell: cd {{playbook_dir}}/weather/microservice-weather && mvn clean package && java -jar target/microservice-weather-1.0-SNAPSHOT.jar >/dev/null 2>&1 &
+  - name: "Start news api "
+    shell: "{{playbook_dir}}/news/myenv/bin/python {{playbook_dir}}/news/app.py >/dev/null 2>&1 &"
+  - name: "start react ui"
+    shell: cd {{playbook_dir}}/react-ui/react-ui && npm start >/dev/null 2>&1 &
