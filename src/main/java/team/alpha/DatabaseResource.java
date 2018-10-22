@@ -41,7 +41,7 @@ class DatabaseResource {
         loginProc = db.prepareCall("{ call login_user(?,?) }");
         signupProc = db.prepareCall("{ ? = call create_user(?,?,?,?,?,?,?) }");
         signupProc.registerOutParameter(1, Types.INTEGER);
-        newsSubscribersStmt = db.prepareStatement("select p.country, array_agg(i.username) from\n" +
+        newsSubscribersStmt = db.prepareStatement("select p.country, array_to_json(array_agg(i.username)) from\n" +
                 "(select userid, country from userpref where get_news_alerts = true) p\n" +
                 "inner join userinfo i on i.userid = p.userid\n" +
                 "group by p.country;");
@@ -120,7 +120,7 @@ class DatabaseResource {
         try {
             ResultSet rs = newsSubscribersStmt.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 NewsSubscribers newsSubscribers = new NewsSubscribers();
                 newsSubscribers.setCountry(rs.getString(1));
                 newsSubscribers.setUsernames(rs.getString(2));
