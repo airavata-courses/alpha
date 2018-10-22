@@ -21,16 +21,6 @@
       dest: "{{playbook_dir}}/weather"
       version: ms-weather
       force: yes
-  - name: "Install Maven"
-    apt: 
-      name: maven
-      state: installed
-      when: ansible_os_family == 'Debian'
-  - name: "Install node"
-    apt:
-      name: node
-      state: installed
-      when: ansible_os_family == 'Debian'
   - name: "Install npm packages for Node"
     npm:
       path: "{{playbook_dir}}/stocks/stock-ms" 
