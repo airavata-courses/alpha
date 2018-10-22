@@ -1,5 +1,5 @@
 drop database if exists activedb;
-drop user if exists demouser;
+drop user if exists $DB_USER;
 create database activedb;
 \connect activedb;
 

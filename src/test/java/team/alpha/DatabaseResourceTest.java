@@ -11,13 +11,13 @@ import team.alpha.model.*;
 public class DatabaseResourceTest {
 
     private DatabaseResource databaseResource;
-    private String username = RandomStringUtils.randomAlphabetic(16);
+    private String username = RandomStringUtils.randomAlphabetic(10)+"@domain.com";
     private String password= RandomStringUtils.randomAlphanumeric(16);
     private final String city = "Bloomington, IN";
     private final String country = "US";
     private final String company = "Apple";
     private final boolean subscribedToNewsAlerts = false;
-    private final boolean subscribedToWeatherAlerts = true;
+    private final boolean subscribedToWeatherAlerts = false;
 
     @Test
     public void test1createDBConnection() {
@@ -92,6 +92,13 @@ public class DatabaseResourceTest {
         credentials.setPassword(RandomStringUtils.randomAlphanumeric(16));
         Response response = databaseResource.login(credentials);
         Assert.assertEquals(response.getStatus(), ResponseStatus.USER_UNAUTHORIZED);
+    }
+
+    @Test
+    public void test3getSubscribedUsersForNews(){
+        databaseResource = new DatabaseResource();
+        Response response = databaseResource.getSubscribedUsersForNews();
+        Assert.assertEquals(response.getStatus(), ResponseStatus.OK);
     }
 
 }

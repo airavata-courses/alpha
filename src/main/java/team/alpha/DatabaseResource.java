@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import team.alpha.model.*;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @RestController
@@ -17,6 +19,7 @@ class DatabaseResource {
     private Connection db;
     private CallableStatement loginProc;
     private CallableStatement signupProc;
+    private PreparedStatement newsSubscribersStmt;
 
 
     DatabaseResource() {
@@ -38,6 +41,10 @@ class DatabaseResource {
         loginProc = db.prepareCall("{ call login_user(?,?) }");
         signupProc = db.prepareCall("{ ? = call create_user(?,?,?,?,?,?,?) }");
         signupProc.registerOutParameter(1, Types.INTEGER);
+        newsSubscribersStmt = db.prepareStatement("select p.country, array_agg(i.username) from\n" +
+                "(select userid, country from userpref where get_news_alerts = true) p\n" +
+                "inner join userinfo i on i.userid = p.userid\n" +
+                "group by p.country;");
     }
 
     @CrossOrigin
@@ -78,7 +85,6 @@ class DatabaseResource {
     @CrossOrigin
     @RequestMapping("/signup")
     Response signup(@RequestBody SignupForm signupForm) {
-        String response = "false";
 
         try {
             signupProc.setString(2, signupForm.getCredentials().getUsername());
@@ -103,6 +109,29 @@ class DatabaseResource {
         } catch (SQLException e) {
             e.printStackTrace();
             return new Response(ResponseStatus.SERVER_ERROR, Constants.MSG_FAILED_TO_CREATE_USER);
+        }
+    }
+
+    @CrossOrigin
+    @RequestMapping("/newssubscribers")
+    Response getSubscribedUsersForNews() {
+
+        List<NewsSubscribers> newsSubscribersList = new ArrayList<>();
+        try {
+            ResultSet rs = newsSubscribersStmt.executeQuery();
+
+            while(rs.next()){
+                NewsSubscribers newsSubscribers = new NewsSubscribers();
+                newsSubscribers.setCountry(rs.getString(1));
+                newsSubscribers.setUsernames(rs.getString(2));
+                newsSubscribersList.add(newsSubscribers);
+            }
+
+            return new Response(ResponseStatus.OK, gson.toJson(newsSubscribersList));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Response(ResponseStatus.SERVER_ERROR, Constants.MSG_FAILED_TO_FETCH_SUBSCRIBER_LIST);
         }
     }
 
