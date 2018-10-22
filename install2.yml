@@ -21,7 +21,7 @@
       dest: "{{playbook_dir}}/weather"
       version: ms-weather
       force: yes
-  - name: name: "Install Maven"
+  - name: "Install Maven"
     apt: 
       name: maven
       state: installed
