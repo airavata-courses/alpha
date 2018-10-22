@@ -29,10 +29,10 @@
   - name: "Install react-scripts"
     shell: cd {{playbook_dir}}/react-ui/react-ui && npm install --save react-scripts 
   - name: "Start stocks api"
-    shell: cd {{playbook_dir}}/stocks/stock-ms && node server.js >/dev/null 2>&1 &
+    shell: cd {{playbook_dir}}/stocks/stock-ms && sudo nohup node server.js >/dev/null 2>&1 &
   - name: "Start weather"
     shell: cd {{playbook_dir}}/weather/microservice-weather && mvn clean package && java -jar target/microservice-weather-1.0-SNAPSHOT.jar >/dev/null 2>&1 &
   - name: "Start news api "
-    shell: "{{playbook_dir}}/news/myenv/bin/python {{playbook_dir}}/news/app.py >/dev/null 2>&1 &"
+    shell: "sudo nohup {{playbook_dir}}/news/myenv/bin/python {{playbook_dir}}/news/app.py >/dev/null 2>&1 &"
   - name: "start react ui"
-    shell: cd {{playbook_dir}}/react-ui/react-ui && npm start >/dev/null 2>&1 &
+    shell: cd {{playbook_dir}}/react-ui/react-ui && sudo nohup npm start >/dev/null 2>&1 &
