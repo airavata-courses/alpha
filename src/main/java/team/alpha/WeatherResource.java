@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import team.alpha.model.ErrorResponse;
-import team.alpha.model.Event;
-import team.alpha.model.WeatherData;
-import team.alpha.model.Wind;
+import team.alpha.model.*;
 import team.alpha.model.owm.OpenWeatherMapData;
 
 import java.io.IOException;
@@ -32,41 +29,40 @@ public class WeatherResource {
 
     @CrossOrigin
     @RequestMapping("/data")
-    String getData(
-            @RequestParam(value = "lon", defaultValue = "" + Constants.BLOOMINGTON_LON) float lon,
-            @RequestParam(value = "lat", defaultValue = "" + Constants.BLOOMINGTON_LAT) float lat) {
+    Response getData(
+            @RequestParam(value = "city", defaultValue = Constants.BLOOMINGTON) String city) {
 
         try {
-            String strResponse = getDataFromThirdParty(lon, lat);
+
+            GPSLocation gpsLocation = Constants.GPS_LOCATION.get(city);
+
+            if (gpsLocation.getLat() == -1.0 || gpsLocation.getLon() == -1.0) {
+                gpsLocation = Constants.GPS_LOCATION.get(Constants.BLOOMINGTON);
+                //return new Response(HttpStatus.SC_BAD_REQUEST, Constants.ERROR_BAD_CITY);
+            }
+
+            String strResponse = getDataFromThirdParty(gpsLocation);
 
             if (strResponse == null) {
-                return getErrorResponse();
+                throw new Exception(Constants.ERROR_FAILED_TO_FETCH);
             }
 
             OpenWeatherMapData openWeatherMapData = gson.fromJson(strResponse, OpenWeatherMapData.class);
             WeatherData weatherData = extractWeatherData(openWeatherMapData);
-            return gson.toJson(weatherData);
 
-
+            return new Response(HttpStatus.SC_OK, gson.toJson(weatherData));
         } catch (Exception e) {
             e.printStackTrace();
-            return getErrorResponse();
+            return new Response(HttpStatus.SC_INTERNAL_SERVER_ERROR, Constants.ERROR_MSG);
         }
 
     }
 
-    private String getErrorResponse() {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setCode(HttpStatus.SC_OK);
-        errorResponse.setMessage(Constants.ERROR_MSG);
-        return gson.toJson(errorResponse);
-    }
-
-    String getDataFromThirdParty(float lon, float lat) {
+    String getDataFromThirdParty(GPSLocation gpsLocation) {
 
         String strResponse = null;
         try {
-            HttpGet request = new HttpGet(Constants.WEATHER_API_URL + "?lat=" + lat + "&lon=" + lon + "&APPID=" + Constants.API_KEY + "&units=imperial");
+            HttpGet request = new HttpGet(Constants.WEATHER_API_URL + "?lat=" + gpsLocation.getLat() + "&lon=" + gpsLocation.getLon() + "&APPID=" + Constants.API_KEY + "&units=imperial");
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             HttpResponse response = client.execute(request);
             int statusCode = response.getStatusLine().getStatusCode();

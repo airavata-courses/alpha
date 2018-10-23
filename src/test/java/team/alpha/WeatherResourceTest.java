@@ -1,5 +1,6 @@
 package team.alpha;
 
+import org.apache.http.HttpStatus;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -7,8 +8,10 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
 import org.mockito.quality.Strictness;
+import team.alpha.model.GPSLocation;
+import team.alpha.model.Response;
 
-import static org.mockito.ArgumentMatchers.anyFloat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
@@ -28,15 +31,14 @@ public class WeatherResourceTest {
 
     @Test
     public void test1GetDataFromThirdParty() {
-        thirdApiResponse = weatherResource.getDataFromThirdParty(Constants.BLOOMINGTON_LON, Constants.BLOOMINGTON_LAT);
+        thirdApiResponse = weatherResource.getDataFromThirdParty(Constants.GPS_LOCATION.get(Constants.BLOOMINGTON));
         Assert.assertNotNull(thirdApiResponse);
     }
 
     @Test
     public void test2GetData() {
-        doReturn(thirdApiResponse).when(weatherResource).getDataFromThirdParty(anyFloat(), anyFloat());
-        String response = weatherResource.getData(Constants.BLOOMINGTON_LON, Constants.BLOOMINGTON_LAT);
-        Assert.assertFalse(response.contains(Constants.ERROR_MSG));
+        doReturn(thirdApiResponse).when(weatherResource).getDataFromThirdParty(any(GPSLocation.class));
+        Response response = weatherResource.getData(Constants.BLOOMINGTON);
+        Assert.assertEquals(response.getStatus(), HttpStatus.SC_OK);
     }
-
 }
