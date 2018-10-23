@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 class News extends Component {
   getNews() {
-    let { country, city } = this.props;
+    let country = this.props.country || "us";
     console.log("inside news" + country);
     fetch("http://localhost:5000/top_headlines?country=" + country)
       .then(res => {

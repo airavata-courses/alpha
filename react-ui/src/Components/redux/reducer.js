@@ -6,7 +6,7 @@ const SET_USER_PREFERENCE = "SET_USER_PREFERENCE";
 //set state
 export function login(username, password) {
   return dispatch => {
-    fetch("http://149.161.203.120:9101/login", {
+    fetch("http://149.165.168.71:9101/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -15,6 +15,21 @@ export function login(username, password) {
     })
       .then(res => res.json())
       .then(result => {
+        dispatch(setLoginSuccess(true));
+        // dispatch(
+        //   setUserPreference({
+        //     // city: "Bloomington, IN",
+        //     // country: "US",
+        //     // company: "Apple",
+        //     // subscribedToNewsAlerts: true,
+        //     // subscribedToWeatherAlerts: false
+        //     city: message.city,
+        //     country: message.country,
+        //     company: message.company,
+        //     subscribedToNewsAlerts: message.subscribedToNewsAlerts,
+        //     subscribedToWeatherAlerts: message.subscribedToWeatherAlerts
+        //   })
+        // );
         if (result.status === 200) {
           console.log(result);
           let message = JSON.parse(result.message);
@@ -22,6 +37,11 @@ export function login(username, password) {
           dispatch(setLoginSuccess(true));
           dispatch(
             setUserPreference({
+              city: "Bloomington, IN",
+              country: "US",
+              company: "Apple",
+              subscribedToNewsAlerts: true,
+              subscribedToWeatherAlerts: false,
               city: message.city,
               country: message.country,
               company: message.company,
@@ -117,9 +137,13 @@ const initialState = {
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_LOGIN_PENDING:
-      return Object.assign({}, state, {
+      // return Object.assign({}, state, {
+      //   isLoginPending: action.isLoginPending
+      // });
+      return {
+        ...state,
         isLoginPending: action.isLoginPending
-      });
+      };
 
     case SET_LOGIN_SUCCESS:
       return Object.assign({}, state, {

@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 
 class SignUpForm extends React.Component {
   createUser(user) {
-    return fetch("http://149.161.203.120:9101/signup", {
+    return fetch("http://149.165.168.71:9101/signup", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -71,6 +71,7 @@ class SignUpForm extends React.Component {
       }
     };
     //to check if user already exists, return should be either 409 or -1(to be done)
+    console.log(user);
     this.createUser(user).then(userId => {
       console.log("userid" + userId.message);
       if (userId.status === 409) {
