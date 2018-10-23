@@ -1,5 +1,5 @@
 drop database if exists activedb;
-drop user if exists $DB_USER;
+drop user if exists DB_USER;
 create database activedb;
 \connect activedb;
 
@@ -72,9 +72,9 @@ insert into geoloc (city, lat, lon) values
 
 insert into countries values ('US'), ('CA'), ('AU'), ('JP');
 
-create user $DB_USER with encrypted password '$DB_PASSWORD';
-grant all privileges on all tables in schema public to $DB_USER;
-grant all privileges on all sequences in schema public to $DB_USER;
-grant all privileges on all functions in schema public to $DB_USER;	
+create user DB_USER with encrypted password 'DB_PASSWORD';
+grant all privileges on all tables in schema public to DB_USER;
+grant all privileges on all sequences in schema public to DB_USER;
+grant all privileges on all functions in schema public to DB_USER;
 
 \connect postgres;
