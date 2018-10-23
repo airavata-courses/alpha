@@ -32,9 +32,7 @@ class DatabaseResource {
     }
 
     static Connection createDBConnection() throws SQLException {
-        Properties properties = new Properties();
-        properties.setProperty("user", "postgres");
-        return DriverManager.getConnection(Constants.DB_URL, properties);
+        return DriverManager.getConnection(Constants.DB_URL);
     }
 
     private void createPreparedStatements() throws SQLException {
