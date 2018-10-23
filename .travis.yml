@@ -11,8 +11,8 @@ services:
   - postgresql
 
 install:
-  - sed -i 's/DB_USER/$DB_USER/' $TRAVIS_BUILD_DIR/dbscripts.sql
-  - sed -i 's/DB_PASSWORD/$DB_PASSWORD/' $TRAVIS_BUILD_DIR/dbscripts.sql
+  - sed -i 's/DB_USER/'"$DB_USER"'/' $TRAVIS_BUILD_DIR/dbscripts.sql
+  - sed -i 's/DB_PASSWORD/'"$DB_PASSWORD"'/' $TRAVIS_BUILD_DIR/dbscripts.sql
 
 before_script:
   - psql -U postgres < $TRAVIS_BUILD_DIR/dbscripts.sql
