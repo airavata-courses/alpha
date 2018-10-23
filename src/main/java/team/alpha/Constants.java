@@ -23,8 +23,8 @@ public class Constants {
 
     public static final String DB_HOSTURL = configProperties.getProperty("db.hosturl");
     public static final String DB_PORT = configProperties.getProperty("db.port");
-    public static final String DB_USER = configProperties.getProperty("db.user");
-    public static final String DB_PASSWORD = configProperties.getProperty("db.password");
+    public static final String DB_USER = System.getenv("DB_USER");
+    public static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
     public static final String DB_URL = "jdbc:postgresql://" + DB_HOSTURL + ":" + DB_PORT + "/activedb?user=" + DB_USER + "&password=" + DB_PASSWORD;
 
     //error messages
