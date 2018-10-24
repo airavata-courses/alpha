@@ -7,4 +7,4 @@ python -m virtualenv flask_env
 source flask_env/bin/activate
 cd $WORKSPACE/news
 pip install -r requirements.txt
-python app.py &
+python app.py
