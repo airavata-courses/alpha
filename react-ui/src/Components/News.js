@@ -5,7 +5,7 @@ class News extends Component {
   getNews() {
     let country = this.props.country || "us";
     console.log("inside news" + country);
-    fetch("http://localhost:5000/top_headlines?country=" + country)
+    fetch("http://149.165.169.233:5000/top_headlines?country=" + country)
       .then(res => {
         if (res.ok) {
           return res.json();
