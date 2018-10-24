@@ -101,8 +101,8 @@ public class WeatherResource {
         Event event = new Event();
         LocalTime sunrise = Instant.ofEpochSecond(owmd.getSys().getSunrise()).atZone(ZoneId.systemDefault()).toLocalTime();
         LocalTime sunset = Instant.ofEpochSecond(owmd.getSys().getSunset()).atZone(ZoneId.systemDefault()).toLocalTime();
-        event.setSunrise(sunrise.getHour() + ":" + sunrise.getMinute());
-        event.setSunset(sunset.getHour() + ":" + sunset.getMinute());
+        event.setSunrise(String.format("%02d",sunrise.getHour()) + ":" + String.format("%02d",sunrise.getMinute()));
+        event.setSunset(String.format("%02d",sunset.getHour()) + ":" + String.format("%02d",sunset.getMinute()));
         weatherData.setEvent(event);
 
         return weatherData;
