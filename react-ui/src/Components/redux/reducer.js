@@ -15,21 +15,6 @@ export function login(username, password) {
     })
       .then(res => res.json())
       .then(result => {
-        dispatch(setLoginSuccess(true));
-        // dispatch(
-        //   setUserPreference({
-        //     // city: "Bloomington, IN",
-        //     // country: "US",
-        //     // company: "Apple",
-        //     // subscribedToNewsAlerts: true,
-        //     // subscribedToWeatherAlerts: false
-        //     city: message.city,
-        //     country: message.country,
-        //     company: message.company,
-        //     subscribedToNewsAlerts: message.subscribedToNewsAlerts,
-        //     subscribedToWeatherAlerts: message.subscribedToWeatherAlerts
-        //   })
-        // );
         if (result.status === 200) {
           console.log(result);
           let message = JSON.parse(result.message);
