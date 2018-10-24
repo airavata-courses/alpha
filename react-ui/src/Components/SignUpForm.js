@@ -89,11 +89,11 @@ class SignUpForm extends React.Component {
         <h1>SignUp</h1>
 
         <div className="form-group">
-          <label className="control-label">Name</label>
+          <label className="control-label">Email</label>
           <input
             value={this.state.username}
             onChange={e => this.onChange(e)}
-            type="text"
+            type="email"
             name="username"
             className="form-control"
           />

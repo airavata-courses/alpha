@@ -32,7 +32,7 @@ class LoginForm extends Component {
       >
         <h1>Login</h1>
         <form name="loginForm">
-          <label style={{ padding: "10px" }}>Username:</label>
+          <label style={{ padding: "10px" }}>Email:</label>
           <input
             type="text"
             name="username"
