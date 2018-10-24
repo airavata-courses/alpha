@@ -52,7 +52,7 @@ pipeline {
         JENKINS_NODE_COOKIE=dontKillMe java -jar target/microservice-database-*.jar &
         cd $WORKSPACE/news && pip install -r requirements.txt
         JENKINS_NODE_COOKIE=dontKillMe nohup python app.py &
-        cd $WORKSPACE/stocks/stock-ms && nohup node server.js  &
+        cd $WORKSPACE/stocks/stock-ms && JENKINS_NODE_COOKIE=dontKillMe nohup node server.js  &
         cd $WORKSPACE/weather && mvn -q package && JENKINS_NODE_COOKIE=dontKillMe nohup java -jar target/microservice-weather-*.jar & 
         cd $WORKSPACE/react/react-ui && npm install && npm install --save react-scripts
         JENKINS_NODE_COOKIE=dontKillMe nohup npm start &
