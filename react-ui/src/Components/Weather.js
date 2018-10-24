@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 class Weather extends Component {
   getWeather() {
-    fetch("http://149.165.169.233:9102/data")
+    fetch("http://149.165.157.99:9102/data")
       .then(res => {
         if (res.ok) {
           return res.json();
