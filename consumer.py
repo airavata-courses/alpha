@@ -1,5 +1,4 @@
 import os
-149.165.170.132 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBGVwJLc6zFgSKBdxlmeqFRl6+rSGkw3ugZPgMS4fQ/vCRFWWqy2GyfgHlDms1QAI3B/f1B6vFzye4gc2OcVSIkI=
 import json
 import pprint
 from time import sleep
@@ -19,12 +18,12 @@ def sendmail(subject, body, from_addr, password, to_addr):
     mail['To'] = to_addr
     mail['Subject'] = subject
 
-    funcBody = body + "\n ----------------------------\n You are receiving this email because you are subscribed " \
+    func_body = body + "\n ----------------------------\n You are receiving this email because you are subscribed " \
                       "to notifications from web dashboard"
 
-    mail.attach(MIMEText(funcBody,'plain'))
+    mail.attach(MIMEText(func_body, 'plain'))
 
-    server = smtplib.SMTP('smtp.gmail.com',587)
+    server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login(from_addr, password)
     server.sendmail(from_addr, to_addr, mail.as_string())
@@ -34,15 +33,24 @@ def sendmail(subject, body, from_addr, password, to_addr):
 
 if __name__ == '__main__':
 
-    consumer = KafkaConsumer("topic_2", auto_offset_reset='earliest',
-                             bootstrap_servers=['localhost:9092'], api_version=(0, 10), consumer_timeout_ms=1000)
-    email_password = os.environ["EMAIL_PASSWORD"]
+    try:
+        with open('config.json') as f:
+            config = json.load(f)
 
-    while True:
-        topics = consumer.poll(2000)
-        for topic in topics.values():
-            for consumer_record in topic:
-                cr_data = json.loads(consumer_record.value)
-                print(cr_data)
-                sendmail("Hourly top News: " + cr_data['news']['title'], cr_data['news']['content'], "siddharthpathak7@gmail.com", email_password, cr_data['toAddr'])
+        consumer = KafkaConsumer(config["kafka"]["topic"], auto_offset_reset='earliest',
+                             bootstrap_servers=[config["kafka"]["server"]], api_version=(0, 10), consumer_timeout_ms=1000)
+
+        while True:
+            topics = consumer.poll(2000)
+            for topic in topics.values():
+                for consumer_record in topic:
+                    cr_data = json.loads(consumer_record.value)
+                    if cr_data["news"]["content"] is None:
+                        content = "Content not found for the news"
+                    else:
+                        content = cr_data["news"]["content"]
+                    sendmail('Hourly top News: ' + cr_data['news']['title'], content, config['email']['email'], config['email']['password'], cr_data['toAddr'])
+
+    except Exception as ex:
+        print(str(ex))
 

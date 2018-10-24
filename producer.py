@@ -5,23 +5,26 @@ import requests
 import os
 
 
-def connect_kafka_producer():
-    producer = None
-    producer = KafkaProducer(bootstrap_servers=['localhost:9092'], value_serializer=lambda x: json.dumps(x).encode('utf-8'), api_version=(0, 10))
+def connect_kafka_producer(server):
+    producer = KafkaProducer(bootstrap_servers=[server], value_serializer=lambda x: json.dumps(x).encode('utf-8'), api_version=(0, 10))
     return producer
 
+
 try:
+
+    with open('config.json') as f:
+        config = json.load(f)
+
     api_key = os.environ["NEWS_API_KEY"]
-    producer_instance = connect_kafka_producer()
+    producer_instance = connect_kafka_producer(config["kafka"]["server"])
     while True:
         # get data from DB here and do the following for each country. 
         # Store pairs of country and user list so we won't need to do multiple requests
 
         # Request for data from the DB endpoint
         r = requests.get(
-                "http://149.165.168.71:9101/newssubscribers"
+                "http://149.165.157.99:9101/newssubscribers"
             )
-
 
         if r.status_code == 200 and r.json()["status"] == 200:
             data = r.json()
@@ -29,25 +32,6 @@ try:
             sleep(60)
             continue
         
-        '''temp = """[
-                {
-                   "country": "us",
-                    "users_list": [
-                        "siddharthpathak7@gmail.com",
-                        "siddharthpathak8@gmail.com"
-                    ] 
-                },
-                {
-                    "country":"jp",
-                    "users_list": [
-                        "hrakholi@iu.edu",
-                        "adhage@iu.edu"
-                    ] 
-                }
-               ]"""
-        temp = json.loads(temp)
-        temp = data'''
-
         data = json.loads(data["message"])
 
         for group in data:
@@ -76,8 +60,7 @@ try:
                     producer_instance.flush()
                     print('Message published successfully.')
         
-        sleep(1800) 
+        sleep(3600)
 
 except Exception as ex:
-    print('Exception while connecting Kafka')
     print(str(ex))

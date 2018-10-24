@@ -1,0 +1,10 @@
+{
+  "kafka" : {
+    "server": "server_ip:port",
+    "topic": "topic_name"
+  },
+  "email": {
+      "email": "username@example.com",
+      "password": "password"
+  }
+}
