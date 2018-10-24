@@ -6,7 +6,7 @@ const SET_USER_PREFERENCE = "SET_USER_PREFERENCE";
 //set state
 export function login(username, password) {
   return dispatch => {
-    fetch("http://149.165.157.99:9101/login", {
+    fetch("http://149.165.169.102:9101/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json"

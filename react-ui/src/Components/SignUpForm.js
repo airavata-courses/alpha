@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 
 class SignUpForm extends React.Component {
   createUser(user) {
-    return fetch("http://149.165.157.99:9101/signup", {
+    return fetch("http://149.165.169.102:9101/signup", {
       method: "post",
       headers: {
         "Content-Type": "application/json"

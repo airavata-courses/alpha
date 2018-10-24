@@ -15,7 +15,7 @@ class News extends Component {
     }
 
     // console.log("inside news" + country);
-    fetch("http://149.165.157.99:5000/top_headlines?country=" + country)
+    fetch("http://149.165.170.184:5000/top_headlines?country=" + country)
       .then(res => {
         if (res.ok) {
           return res.json();
