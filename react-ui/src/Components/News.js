@@ -44,7 +44,7 @@ class News extends Component {
     };
 
     this.getNews = this.getNews.bind(this);
-    // this.getNews();
+    this.getNews();
 
     // this.componentDidMount = this.componentDidMount.bind(this);
   }
