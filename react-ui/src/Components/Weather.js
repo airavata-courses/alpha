@@ -17,7 +17,7 @@ class Weather extends Component {
       .then(result => {
         this.setState({
           isLoaded: true,
-          weather: result,
+          weather: result.message,
           error: 0
         });
       });
