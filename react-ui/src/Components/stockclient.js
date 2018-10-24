@@ -1,5 +1,5 @@
 import openSocket from "socket.io-client";
-const socket = openSocket("ws://localhost:8000");
+const socket = openSocket("ws://149.165.157.99:8000");
 
 function subscribeToStock(companyName, callback) {
   socket.on("stockprice", val => callback("apple", val));
