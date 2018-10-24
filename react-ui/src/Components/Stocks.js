@@ -31,14 +31,14 @@ class Stocks extends Component {
   render() {
     return (
       <div className="Stocks">
-        <p className="Stocks-intro">
+        <div className="Stocks-intro">
           <div
             style={{ border: "2px solid black", width: "70%", margin: "auto" }}
           >
             <h3> Apple stock value is : {this.state.appleStock} </h3>
             <h3> FB stock value is : {this.state.fbStock} </h3>
           </div>
-        </p>
+        </div>
       </div>
     );
   }

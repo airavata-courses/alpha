@@ -17,7 +17,7 @@ class Weather extends Component {
       .then(result => {
         this.setState({
           isLoaded: true,
-          weather: result.message,
+          weather: JSON.parse(result.message),
           error: 0
         });
       });
@@ -33,12 +33,14 @@ class Weather extends Component {
 
     this.getWeather = this.getWeather.bind(this);
     this.getWeather();
-    this.componentDidMount = this.componentDidMount.bind(this);
+    // this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   render() {
     console.log("inside weather");
     const { error, isLoaded, weather } = this.state;
+    console.log("weather", weather);
+
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -77,8 +79,5 @@ const mapStateToProps = state => {
   };
 };
 
-Weather = connect(
-  mapStateToProps,
-  () => {}
-)(Weather);
+Weather = connect(mapStateToProps)(Weather);
 export { Weather };
