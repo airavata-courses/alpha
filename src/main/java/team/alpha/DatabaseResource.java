@@ -10,7 +10,6 @@ import team.alpha.model.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @RestController
 class DatabaseResource {
@@ -20,7 +19,6 @@ class DatabaseResource {
     private CallableStatement loginProc;
     private CallableStatement signupProc;
     private PreparedStatement newsSubscribersStmt;
-
 
     DatabaseResource() {
         try {
@@ -132,5 +130,4 @@ class DatabaseResource {
             return new Response(ResponseStatus.SERVER_ERROR, Constants.MSG_FAILED_TO_FETCH_SUBSCRIBER_LIST);
         }
     }
-
 }
