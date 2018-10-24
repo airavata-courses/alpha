@@ -16,17 +16,12 @@ export function login(username, password) {
       .then(res => res.json())
       .then(result => {
         if (result.status === 200) {
-          console.log(result);
+          // console.log("result", result);
           let message = JSON.parse(result.message);
-          console.log(message.city);
+          // console.log("city", message.city);
           dispatch(setLoginSuccess(true));
           dispatch(
             setUserPreference({
-              city: "Bloomington, IN",
-              country: "US",
-              company: "Apple",
-              subscribedToNewsAlerts: true,
-              subscribedToWeatherAlerts: false,
               city: message.city,
               country: message.country,
               company: message.company,
@@ -113,7 +108,7 @@ const initialState = {
   userPreferences: {
     city: "",
     country: "",
-    company: "",
+    company: "apple",
     subscribedToNewsAlerts: false,
     subscribedToWeatherAlerts: false
   }
@@ -143,8 +138,14 @@ export default function reducer(state = initialState, action) {
     case SET_USER_PREFERENCE:
       return {
         ...state,
+        isLoginSuccess: true,
         userPreferences: action.payload
       };
+
+    // case SET_USER_PREFERENCE:
+    //   return Object.assign({}, state, {
+    //     userPreferences: action.payload
+    //   });
 
     default:
       return state;

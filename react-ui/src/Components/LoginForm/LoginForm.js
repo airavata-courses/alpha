@@ -73,7 +73,7 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log("state", state);
+  // console.log("state", state);
   return {
     isLoginPending: state.isLoginPending,
     isLoginSuccess: state.isLoginSuccess,

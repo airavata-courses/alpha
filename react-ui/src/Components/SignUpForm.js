@@ -11,14 +11,14 @@ class SignUpForm extends React.Component {
       body: JSON.stringify(user)
     })
       .then(res => {
-        console.log("res ", res);
+        // console.log("res ", res);
         if (res.ok) {
           return res.json();
         }
       })
 
       .then(result => {
-        console.log("result", result);
+        // console.log("result", result);
         return result;
       });
   }
@@ -41,8 +41,8 @@ class SignUpForm extends React.Component {
       username: "",
       password: "",
       password_confirmation: "",
-      city: "",
-      country: "",
+      city: "Bloomington, IN",
+      country: "US",
       company: "",
       subscribedToNewsAlerts: "",
       subscribedToWeatherAlerts: ""
@@ -71,14 +71,14 @@ class SignUpForm extends React.Component {
       }
     };
     //to check if user already exists, return should be either 409 or -1(to be done)
-    console.log(user);
+    // console.log(user);
     this.createUser(user).then(userId => {
-      console.log("userid" + userId.message);
+      // console.log("userid" + userId.message);
       if (userId.status === 409) {
         console.log("user already exists");
         alert("user already exists");
       } else if (userId.status === 200) {
-        this.props.history.push("/");
+        this.props.history.push("/login");
       }
     });
   }

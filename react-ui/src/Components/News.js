@@ -3,8 +3,18 @@ import { connect } from "react-redux";
 
 class News extends Component {
   getNews() {
-    let country = this.props.country || "us";
-    console.log("inside news" + country);
+    let country;
+
+    console.log("props country", this.props.country);
+    // console.log(this.props.country);
+    if (this.props.country) {
+      country = this.props.country;
+      // country = this.props.country;
+    } else {
+      country = "us";
+    }
+
+    // console.log("inside news" + country);
     fetch("http://149.165.157.99:5000/top_headlines?country=" + country)
       .then(res => {
         if (res.ok) {
@@ -34,8 +44,9 @@ class News extends Component {
     };
 
     this.getNews = this.getNews.bind(this);
-    this.getNews();
-    this.componentDidMount = this.componentDidMount.bind(this);
+    // this.getNews();
+
+    // this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   render() {
@@ -61,11 +72,13 @@ class News extends Component {
 
   componentDidMount() {
     // setInterval(this.getNews, 300000);
-    setInterval(() => this.getNews(), 300000);
+    this.getNews();
+    setInterval(() => this.getNews(), 1000);
+    // this.getNews;
   }
 }
 const mapStateToProps = state => {
-  console.log("state", state);
+  console.log("News state", state);
   return {
     city: state.userPreferences.city,
     country: state.userPreferences.country,

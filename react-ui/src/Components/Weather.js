@@ -37,9 +37,9 @@ class Weather extends Component {
   }
 
   render() {
-    console.log("inside weather");
+    // console.log("inside weather");
     const { error, isLoaded, weather } = this.state;
-    console.log("weather", weather);
+    // console.log("weather", weather);
 
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -70,7 +70,7 @@ class Weather extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log("state", state);
+  console.log("state in weather", state);
   return {
     city: state.userPreferences.city,
     country: state.userPreferences.country,
