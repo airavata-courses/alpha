@@ -43,7 +43,7 @@ class SignUpForm extends React.Component {
       password_confirmation: "",
       city: "Bloomington, IN",
       country: "US",
-      company: "",
+      company: "apple",
       subscribedToNewsAlerts: "",
       subscribedToWeatherAlerts: ""
     };
@@ -152,13 +152,15 @@ class SignUpForm extends React.Component {
         </div>
         <div className="form-group">
           <label className="control-label">Company</label>
-          <input
+          <select
+            className="form-control"
+            name="company"
             onChange={this.onChange}
             value={this.state.company}
-            type="text"
-            name="company"
-            className="form-control"
-          />
+          >
+            <option value="apple">Apple</option>
+            <option value="facebook">Facebook</option>
+          </select>
         </div>
 
         <div

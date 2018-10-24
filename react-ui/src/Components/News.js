@@ -71,9 +71,13 @@ class News extends Component {
   }
 
   componentDidMount() {
+    setInterval(() => this.getNews(), 100000);
+  }
+
+  componentWillReceiveProps({ country }) {
     // setInterval(this.getNews, 300000);
     this.getNews();
-    setInterval(() => this.getNews(), 1000);
+    // setInterval(() => this.getNews(), 1000);
     // this.getNews;
   }
 }
