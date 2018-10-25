@@ -1,7 +1,7 @@
 {
   "kafka" : {
-    "server": "server_ip:port",
-    "topic": "topic_name"
+    "server": "localhost:9092",
+    "topic": "topic_news"
   },
   "email": {
       "email": "username@example.com",
