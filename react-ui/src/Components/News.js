@@ -44,7 +44,7 @@ class News extends Component {
     };
 
     this.getNews = this.getNews.bind(this);
-    this.getNews();
+    // this.getNews();
 
     // this.componentDidMount = this.componentDidMount.bind(this);
   }
@@ -71,7 +71,7 @@ class News extends Component {
   }
 
   componentDidMount() {
-    setInterval(() => this.getNews(), 100000);
+    setInterval(() => this.getNews(), 5000);
   }
 
   componentWillReceiveProps({ country }) {
