@@ -23,7 +23,7 @@ try:
 
         # Request for data from the DB endpoint
         r = requests.get(
-                "http://149.165.157.99:9101/newssubscribers"
+                "http://149.165.169.102:9101/newssubscribers"
             )
 
         if r.status_code == 200 and r.json()["status"] == 200:
