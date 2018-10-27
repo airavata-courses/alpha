@@ -1,5 +1,15 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
+import styles from "./SignUpForm.css";
+
+import {
+  FormControl,
+  Form,
+  Radio,
+  FormGroup,
+  ControlLabel
+} from "react-bootstrap";
+import { FieldGroup } from "./FieldGroup";
 
 class SignUpForm extends React.Component {
   createUser(user) {
@@ -22,19 +32,7 @@ class SignUpForm extends React.Component {
         return result;
       });
   }
-  //   checkCredentials() {
-  //     fetch("https://jsonplaceholder.typicode.com/posts", {
-  //       method: "post",
-  //       headers: {
-  //         "Content-Type": "application/json"
-  //       },
-  //       body: JSON.stringify(this.state)
-  //     })
-  //       .then(res => res.json())
-  //       .then(result => {
-  //         return result;
-  //       });
-  //   }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -53,6 +51,7 @@ class SignUpForm extends React.Component {
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
+    console.log("onchange", e.target.value);
   }
 
   onSubmit(e) {
@@ -87,138 +86,181 @@ class SignUpForm extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.onSubmit}>
+      <Form style={{ width: "50%", margin: "auto" }} onSubmit={this.onSubmit}>
         <h1>SignUp</h1>
+        <p>Please fill in this form to create an account.</p>
+        <hr />
+        <div className="form-div">
+          <div>
+            <FieldGroup
+              id="useremail"
+              type="email"
+              label="Email: "
+              onChange={this.onChange}
+              placeholder="Enter text"
+            />
+          </div>
 
-        <div className="form-group">
-          <label className="control-label">Email</label>
-          <input
-            value={this.state.username}
-            onChange={e => this.onChange(e)}
-            type="email"
-            name="username"
-            className="form-control"
-          />
-        </div>
+          <div>
+            <FieldGroup
+              id="pass"
+              onChange={this.onChange}
+              type="password"
+              label="Password: "
+              placeholder="Enter Password"
+            />
+          </div>
 
-        <div className="form-group">
-          <label className="control-label">Password</label>
-          <input
-            value={this.state.password}
-            onChange={this.onChange}
-            type="password"
-            name="password"
-            className="form-control"
-          />
-        </div>
+          <div>
+            <FieldGroup
+              id="pass_con"
+              onChange={this.onChange}
+              type="password"
+              label="PassConfirm: "
+              placeholder="Enter Password"
+            />
+          </div>
+          <br />
+          <div>
+            <FormGroup style={{ display: "flex", justifyContent: "center" }}>
+              <ControlLabel id="controllabel" style={{ margin: "auto" }}>
+                City:{" "}
+              </ControlLabel>
 
-        <div className="form-group">
-          <label className="control-label">Confirm Password</label>
-          <input
-            value={this.state.password_confirmation}
-            onChange={this.onChange}
-            type="password"
-            name="password_confirmation"
-            className="form-control"
-          />
-        </div>
+              <FormControl
+                componentClass="select"
+                placeholder="select"
+                onChange={this.onChange}
+                id="formControl"
+              >
+                <option value="select">select</option>
+                <option value="Bloomington, IN">Bloomington, IN</option>
+                <option value="New York, NY">New York, NY</option>
+                <option value="Los Angeles, CA">Los Angeles, CA</option>
+                <option value="Houston, TX">Houston, TX</option>
+                <option value="Chicago, IL">Chicago, IL</option>
+              </FormControl>
+            </FormGroup>
+          </div>
+          <br />
 
-        <div className="form-group">
-          <label className="control-label">City</label>
-          <select
-            className="form-control"
-            name="city"
-            onChange={this.onChange}
-            value={this.state.city}
-          >
-            <option value="Bloomington, IN">Bloomington, IN</option>
-            <option value="New York, NY">New York, NY</option>
-            <option value="Los Angeles, CA">Los Angeles, CA</option>
-            <option value="Houston, TX">Houston, TX</option>
-            <option value="Chicago, IL">Chicago, IL</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label className="control-label">Country</label>
-          <select
-            className="form-control"
-            name="country"
-            onChange={this.onChange}
-            value={this.state.country}
-          >
-            <option value="US">US</option>
-            <option value="AU">AU</option>
-            <option value="CA">CA</option>
-            <option value="JP">JP</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label className="control-label">Company</label>
-          <select
-            className="form-control"
-            name="company"
-            onChange={this.onChange}
-            value={this.state.company}
-          >
-            <option value="apple">Apple</option>
-            <option value="facebook">Facebook</option>
-          </select>
-        </div>
+          <div>
+            <FormGroup style={{ display: "flex", justifyContent: "center" }}>
+              <ControlLabel id="controllabel" style={{ margin: "auto" }}>
+                Country:{" "}
+              </ControlLabel>
 
-        <div
-          className="form-group"
-          //   onChange={event => this.state.subscribedToNewsAlerts}
-        >
-          <label className="control-label">News Alert:</label>
-          <input
-            type="radio"
-            value="true"
-            name="subscribedToNewsAlerts"
-            checked={this.state.subscribedToNewsAlerts === "true"}
-            onChange={this.onChange}
-            className="form-control"
-          />
-          ON
-          <input
-            type="radio"
-            value="false"
-            name="subscribedToNewsAlerts"
-            checked={this.state.subscribedToNewsAlerts === "false"}
-            onChange={this.onChange}
-            className="form-control"
-          />
-          OFF
-        </div>
+              <FormControl
+                componentClass="select"
+                placeholder="select"
+                onChange={this.onChange}
+                id="formControl"
+              >
+                <option value="select">select</option>
+                <option value="US">US</option>
+                <option value="AU">AU</option>
+                <option value="CA">CA</option>
+                <option value="JP">JP</option>
+              </FormControl>
+            </FormGroup>
+          </div>
+          <br />
 
-        <div
-          className="form-group"
-          //   onChange={event => this.state.subscribedToWeatherAlerts}
-        >
-          <label className="control-label">Weather Alert:</label>
-          <input
-            type="radio"
-            value="true"
-            name="subscribedToWeatherAlerts"
-            checked={this.state.subscribedToWeatherAlerts === "true"}
-            onChange={this.onChange}
-            className="form-control"
-          />
-          ON
-          <input
-            type="radio"
-            value="false"
-            name="subscribedToWeatherAlerts"
-            checked={this.state.subscribedToWeatherAlerts === "false"}
-            onChange={this.onChange}
-            className="form-control"
-          />
-          OFF
-        </div>
+          <div>
+            <FormGroup style={{ display: "flex", justifyContent: "center" }}>
+              <ControlLabel id="controllabel" style={{ margin: "auto" }}>
+                Company:{" "}
+              </ControlLabel>
 
-        <div className="form-group">
-          <button className="btn btn-primary btn-lg">SignUp</button>
+              <FormControl
+                componentClass="select"
+                placeholder="select"
+                onChange={this.onChange}
+                id="formControl"
+              >
+                <option value="select">select</option>
+                <option value="apple">Apple</option>
+                <option value="facebook">Facebook</option>
+              </FormControl>
+            </FormGroup>
+          </div>
+          <br />
+
+          <div>
+            <FormGroup
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginLeft: "-65%"
+              }}
+            >
+              <ControlLabel>News Alert: </ControlLabel>
+              <div style={{ marginLeft: "30px" }}>
+                <Radio
+                  // type="radio"
+                  value="true"
+                  name="subscribedToNewsAlerts"
+                  checked={this.state.subscribedToNewsAlerts === "true"}
+                  onChange={this.onChange}
+                  inline
+                />
+                Yes{" "}
+                <Radio
+                  // type="radio"
+                  value="false"
+                  name="subscribedToNewsAlerts"
+                  checked={this.state.subscribedToNewsAlerts === "false"}
+                  onChange={this.onChange}
+                  // className="form-control"
+                  inline
+                />
+                No
+              </div>
+            </FormGroup>
+          </div>
+          <br />
+          <div>
+            <FormGroup
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginLeft: "-65%"
+              }}
+            >
+              <ControlLabel>Weather Alert: </ControlLabel>
+              <div style={{ marginLeft: "11px" }}>
+                <Radio
+                  type="radio"
+                  value="true"
+                  name="subscribedToWeatherAlerts"
+                  checked={this.state.subscribedToWeatherAlerts === "true"}
+                  onChange={this.onChange}
+                  inline
+                />
+                Yes{" "}
+                <Radio
+                  type="radio"
+                  value="false"
+                  name="subscribedToWeatherAlerts"
+                  checked={this.state.subscribedToWeatherAlerts === "false"}
+                  onChange={this.onChange}
+                  inline
+                />
+                No
+              </div>
+            </FormGroup>
+          </div>
+        </div>
+        <br />
+
+        <div className="clearfix">
+          <button className="signupbtn" inline>
+            SignUp
+          </button>
 
           <button
+            className="loginbtn"
+            inline
             onClick={() => {
               this.props.history.push("/");
             }}
@@ -226,7 +268,7 @@ class SignUpForm extends React.Component {
             Login
           </button>
         </div>
-      </form>
+      </Form>
     );
   }
 }

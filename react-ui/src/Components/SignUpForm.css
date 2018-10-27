@@ -1,0 +1,28 @@
+#formControl {
+  width: 80%;
+  padding: 12px 20px;
+  /* margin: 8px 0; */
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  /* margin-right: 15px; */
+  display: "flex";
+  justifycontent: "center";
+  margin-right: 15px;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 30%;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
