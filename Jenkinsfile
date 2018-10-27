@@ -17,3 +17,4 @@ stage('deploy react ') {
       }
     }
     }
+}
