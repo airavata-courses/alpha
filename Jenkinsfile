@@ -122,8 +122,9 @@ pipeline {
         '''
       }
         }
-        
-    stage('deploy kafka') {
+   
+   // commenting kafka as kafka instance is not up 
+   /* stage('deploy kafka') {
       steps {
           sh 'echo'
       }
@@ -148,7 +149,7 @@ pipeline {
             python consumer.py > consumer.txt' &
             '''
         }
-    }
+    }*/ 
     stage('deploy react ') {
       steps {
         sh '''
