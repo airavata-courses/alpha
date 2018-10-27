@@ -31,7 +31,6 @@ tools {
     
     stage('Deploy') {
       steps {
-         sh 'rm -rf $WORKSPACE/'
         sh '''JENKINS_NODE_COOKIE=dontKillMe nohup ssh -tt ubuntu@149.165.170.138 'rm -rf weather
         echo "y" | sudo apt install openjdk-8-jdk
         fuser -k 9102/tcp || true
