@@ -1,3 +1,4 @@
+
 pipeline {
   agent any
  
@@ -16,10 +17,24 @@ pipeline {
       }
     }
      
-    stage('Test') {
+    stage('CI') {
       steps {
          sh 'cd $WORKSPACE/stock-ms/ && npm test'
+         sh '&'
       }
-    }      
+    } 
+    stage('deploy stocks'){
+        steps{
+            sh '''
+        JENKINS_NODE_COOKIE=dontKillMe nohup ssh -tt ubuntu@149.165.170.132 'rm -rf stocks
+        echo "y" | sudo apt-get install nodejs
+        echo "y" | sudo apt-get install npm
+        fuser -k 8000/tcp || true
+        git clone -b ms-stocks https://github.com/airavata-courses/alpha.git stocks
+        cd stocks/stock-ms
+        node server.js' &
+        '''
+        }
+    }
   }
 }
