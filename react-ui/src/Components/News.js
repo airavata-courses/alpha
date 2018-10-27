@@ -44,7 +44,7 @@ class News extends Component {
     };
 
     this.getNews = this.getNews.bind(this);
-    // this.getNews();
+    this.getNews();
 
     // this.componentDidMount = this.componentDidMount.bind(this);
   }
@@ -57,21 +57,37 @@ class News extends Component {
       return <div>Loading...</div>;
     } else {
       return (
-        <div
-          style={{ border: "2px solid black", width: "70%", margin: "auto" }}
-        >
-          <ul>
-            {news.map((item, id) => (
-              <li key={id}>{item}</li>
-            ))}
-          </ul>
+        <div style={{ border: "1px solid #ccc", width: "60%", margin: "auto" }}>
+          <div style={{ border: "1px solid #ccc", backgroundColor: "gray" }}>
+            <h3 style={{ textAlign: "center" }}>NEWS FEED: </h3>
+          </div>
+
+          {news.map((item, id) => (
+            <div>
+              <div
+                style={{
+                  border: "1px solid #ccc ",
+                  padding: "10px",
+                  display: "flex",
+                  justifyContent: "left"
+                }}
+                key={id}
+              >
+                <img
+                  src={require("./news_images/News.jpeg")}
+                  style={{ width: "50px", height: "50px", margin: "left" }}
+                />
+                <div style={{ padding: "15px" }}>{item}</div>
+              </div>
+            </div>
+          ))}
         </div>
       );
     }
   }
 
   componentDidMount() {
-    setInterval(() => this.getNews(), 5000);
+    setInterval(() => this.getNews(), 300000);
   }
 
   componentWillReceiveProps({ country }) {

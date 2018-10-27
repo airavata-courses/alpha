@@ -47,10 +47,14 @@ class Weather extends Component {
       return <div>Loading...</div>;
     } else {
       return (
-        <div
-          style={{ border: "2px solid black", width: "70%", margin: "auto" }}
-        >
-          <h2>{weather.shortDesc}</h2>
+        <div style={{ width: "90%" }}>
+          <div style={{ border: "1px solid #ccc", backgroundColor: "Gray" }}>
+            <h3>Weather Feed</h3>
+          </div>
+          {/* if({weather.shortDesc}==="cloudy"){
+
+          } */}
+          <h4>{weather.shortDesc}</h4>
           <p>Description: {weather.description}</p>
           <p>Temperature: {weather.temperature} F</p>
           <p>Wind speed: {weather.wind.speed} miles/hour</p>

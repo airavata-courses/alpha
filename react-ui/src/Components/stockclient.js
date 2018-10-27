@@ -17,7 +17,7 @@ function subscribeToStock(companyName, callback) {
       socket.on("stockprice", val => callback(val));
       break;
   }
-  socket.emit("subscribeToLiveStocks", 1000);
+  socket.emit("subscribeToLiveStocks", 10000);
 }
 
 export { subscribeToStock };

@@ -24,6 +24,7 @@ class Stocks extends Component {
         //     fbStock: arg
         //   };
         // }
+        value = value.toFixed(2);
         return { stockValue: value };
       });
       // }
@@ -55,14 +56,15 @@ class Stocks extends Component {
     return (
       <div className="Stocks">
         <div className="Stocks-intro">
-          <div
-            style={{ border: "2px solid black", width: "70%", margin: "auto" }}
-          >
+          <div style={{ width: "100%" }}>
+            <div style={{ border: "1px solid #ccc", backgroundColor: "Gray" }}>
+              <h3>Stocks Update</h3>
+            </div>
             {/* <h3> Apple stock value is : {this.state.appleStock} </h3>
             <h3> FB stock value is : {this.state.fbStock} </h3> */}
             <h3>
               {" "}
-              Stock Value for {this.props.company} is : {this.state.stockValue}
+              {this.props.company}: {this.state.stockValue}
             </h3>
           </div>
         </div>
