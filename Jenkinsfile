@@ -1,5 +1,7 @@
 pipeline {
+  
   agent any
+  
   environment {
         NEWS_API_KEY     = credentials('NEWS_API_KEY')
     }
