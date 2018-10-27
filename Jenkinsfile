@@ -20,7 +20,6 @@ pipeline {
     stage('CI') {
       steps {
          sh 'cd $WORKSPACE/stock-ms/ && npm test'
-         sh '&'
       }
     } 
     stage('deploy stocks'){
