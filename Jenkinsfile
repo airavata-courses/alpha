@@ -1,12 +1,16 @@
-
 pipeline {
-  agent any
+  agent { label 'stocks_slave'}
  
   tools {nodejs 'node'}
  
+ environment {
+        JENKINS_NODE_COOKIE = credentials('JENKINS_NODE_COOKIE')
+    }
+    
   stages {
     stage('Build') {
       steps {
+        sh 'rm -rf $WORKSPACE'
         git branch: 'ms-stocks', url: 'https://github.com/airavata-courses/alpha.git'
       }
     }
@@ -25,13 +29,8 @@ pipeline {
     stage('deploy stocks'){
         steps{
             sh '''
-        JENKINS_NODE_COOKIE=dontKillMe nohup ssh -tt ubuntu@149.165.170.132 'rm -rf stocks
-        echo "y" | sudo apt-get install nodejs
-        echo "y" | sudo apt-get install npm
         fuser -k 8000/tcp || true
-        git clone -b ms-stocks https://github.com/airavata-courses/alpha.git stocks
-        cd stocks/stock-ms
-        node server.js' &
+        JENKINS_NODE_COOKIE=dontKillMe cd $WORKSPACE/stock-ms && node server.js &
         '''
         }
     }
