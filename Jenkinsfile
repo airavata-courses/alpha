@@ -23,7 +23,10 @@ pipeline {
      
     stage('CI') {
       steps {
-         sh 'cd $WORKSPACE/stock-ms/ && npm test'
+         sh '''
+         fuser -k 8000/tcp || true
+         cd $WORKSPACE/stock-ms/ && npm test
+         '''
       }
     } 
     stage('deploy stocks'){
