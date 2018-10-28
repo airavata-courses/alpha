@@ -1,6 +1,6 @@
 pipeline {
   
-  agent any
+  agent {label 'news_slave' }
   
   environment {
         NEWS_API_KEY     = credentials('NEWS_API_KEY')
