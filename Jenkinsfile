@@ -28,8 +28,8 @@ pipeline {
     stage('Deploy') {
       steps {
          sh '''
-                fuser -k 5000/tcp || true
-                JENKINS_NODE_COOKIE=dontKillMe python app.py &
+            fuser -k 5000/tcp || true
+            JENKINS_NODE_COOKIE=dontKillMe python app.py &
             '''
       }
     }
