@@ -38,6 +38,7 @@ pipeline {
             '''
         }
     }
+    
     stage('deploy'){
         steps{
             sh'''
@@ -47,5 +48,5 @@ pipeline {
             '''    
             }
         }
-  } 
-    }
+     } 
+ }
