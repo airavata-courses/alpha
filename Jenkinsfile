@@ -1,4 +1,5 @@
 pipeline {
+  
   agent { label 'stocks_slave'}
  
   tools {nodejs 'node'}
@@ -37,5 +38,7 @@ pipeline {
         '''
         }
     }
+    
   }
+  
 }
