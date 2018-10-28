@@ -1,12 +1,12 @@
 pipeline {
   agent { label 'weather_slave' }
   
- environment {
+  environment {
        WEATHER_API_KEY    = credentials('WEATHER_API_KEY')
        JENKINS_NODE_COOKIE = credentials('JENKINS_NODE_COOKIE')
 
     }
-tools {
+  tools {
         maven 'maven'
         jdk 'jdk'
     }
