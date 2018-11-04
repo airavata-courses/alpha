@@ -39,7 +39,9 @@ if __name__ == '__main__':
 
         consumer = KafkaConsumer(config["kafka"]["topic"], auto_offset_reset='earliest',
                              bootstrap_servers=[config["kafka"]["server"]], api_version=(0, 10), consumer_timeout_ms=1000)
-
+ 
+        email = os.environ["EMAIL_ID"]
+        password = os.environ["EMAIL_PASSWORD"]
         while True:
             topics = consumer.poll(2000)
             for topic in topics.values():
@@ -49,7 +51,7 @@ if __name__ == '__main__':
                         content = "Content not found for the news"
                     else:
                         content = cr_data["news"]["content"]
-                    sendmail('Hourly top News: ' + cr_data['news']['title'], content, config['email']['email'], config['email']['password'], cr_data['toAddr'])
+                    sendmail('Hourly top News: ' + cr_data['news']['title'], content, email, password, cr_data['toAddr'])
 
     except Exception as ex:
         print(str(ex))
