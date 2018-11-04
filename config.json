@@ -2,9 +2,5 @@
   "kafka" : {
     "server": "localhost:9092",
     "topic": "topic_news"
-  },
-  "email": {
-      "email": "username@example.com",
-      "password": "password"
   }
 }
