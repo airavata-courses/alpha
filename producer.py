@@ -56,7 +56,7 @@ try:
                         }
                     }
 
-                    producer_instance.send("topic_2", value=data)
+                    producer_instance.send(config["kafka"]["topic"], value=data)
                     producer_instance.flush()
                     print('Message published successfully.')
         
