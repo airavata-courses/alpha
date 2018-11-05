@@ -10,19 +10,18 @@ import team.alpha.model.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DatabaseResourceTest {
 
-    private DatabaseResource databaseResource;
-    private String username = RandomStringUtils.randomAlphabetic(10)+"@domain.com";
-    private String password= RandomStringUtils.randomAlphanumeric(16);
-    private final String city = "Bloomington, IN";
-    private final String country = "US";
-    private final String company = "Apple";
-    private final boolean subscribedToNewsAlerts = false;
-    private final boolean subscribedToWeatherAlerts = false;
+    private static DatabaseResource databaseResource;
+    private static String username = RandomStringUtils.randomAlphabetic(10) + "@domain.com";
+    private static String password = RandomStringUtils.randomAlphanumeric(16);
+    private static final String city = "Bloomington, IN";
+    private static final String country = "US";
+    private static final String company = "Apple";
+    private static final boolean subscribedToNewsAlerts = false;
+    private static final boolean subscribedToWeatherAlerts = false;
 
     @Test
     public void test1createDBConnection() {
         try {
-            DatabaseResource.createDBConnection();
             databaseResource = new DatabaseResource();
         } catch (Exception e) {
             Assert.fail();
@@ -30,12 +29,9 @@ public class DatabaseResourceTest {
     }
 
     @Test
-    public void test2DatabaseResource() {
-        databaseResource = new DatabaseResource();
+    public void test2SignupTests() {
         checkSignupSucceeds();
         checkSignupFails();
-        checkLoginSucceeds();
-        checkLoginFails();
     }
 
     private void checkSignupSucceeds() {
@@ -76,6 +72,12 @@ public class DatabaseResourceTest {
         Assert.assertEquals(response.getStatus(), ResponseStatus.USERNAME_CONFLICT);
     }
 
+    @Test
+    public void test3LoginTests() {
+        checkLoginSucceeds();
+        checkLoginFails();
+    }
+
     private void checkLoginSucceeds() {
         Assert.assertNotNull(databaseResource);
         Credentials credentials = new Credentials();
@@ -95,8 +97,7 @@ public class DatabaseResourceTest {
     }
 
     @Test
-    public void test3getSubscribedUsersForNews(){
-        databaseResource = new DatabaseResource();
+    public void test4getSubscribedUsersForNews() {
         Response response = databaseResource.getSubscribedUsersForNews();
         Assert.assertEquals(response.getStatus(), ResponseStatus.OK);
     }

@@ -15,32 +15,37 @@ import java.util.List;
 class DatabaseResource {
 
     private Gson gson = new Gson();
-    private Connection db;
+    private static Connection db;
     private CallableStatement loginProc;
     private CallableStatement signupProc;
     private PreparedStatement newsSubscribersStmt;
 
     DatabaseResource() {
+        createDBConnection();
+        createPreparedStatements();
+    }
+
+    private static void createDBConnection() {
         try {
-            db = createDBConnection();
-            createPreparedStatements();
+            db = DriverManager.getConnection(Constants.DB_URL);
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException("Failed to create a database connection");
         }
     }
 
-    static Connection createDBConnection() throws SQLException {
-        return DriverManager.getConnection(Constants.DB_URL);
-    }
-
-    private void createPreparedStatements() throws SQLException {
-        loginProc = db.prepareCall("{ call login_user(?,?) }");
-        signupProc = db.prepareCall("{ ? = call create_user(?,?,?,?,?,?,?) }");
-        signupProc.registerOutParameter(1, Types.INTEGER);
-        newsSubscribersStmt = db.prepareStatement("select p.country, array_to_json(array_agg(i.username)) from\n" +
-                "(select userid, country from userpref where get_news_alerts = true) p\n" +
-                "inner join userinfo i on i.userid = p.userid\n" +
-                "group by p.country;");
+    private void createPreparedStatements() {
+        try {
+            loginProc = db.prepareCall("{ call login_user(?,?) }");
+            signupProc = db.prepareCall("{ ? = call create_user(?,?,?,?,?,?,?) }");
+            signupProc.registerOutParameter(1, Types.INTEGER);
+            newsSubscribersStmt = db.prepareStatement("select p.country, array_to_json(array_agg(i.username)) from\n" +
+                    "(select userid, country from userpref where get_news_alerts = true) p\n" +
+                    "inner join userinfo i on i.userid = p.userid\n" +
+                    "group by p.country;");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @CrossOrigin
