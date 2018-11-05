@@ -4,6 +4,7 @@
  environment {
         NEWS_API_KEY = credentials('NEWS_API_KEY')
         EMAIL_PASSWORD = credentials('EMAIL_PASSWORD')
+        EMAIL_ID = credentials('EMAIL_ID')
         JENKINS_NODE_COOKIE = credentials('JENKINS_NODE_COOKIE')
     }
     
