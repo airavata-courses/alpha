@@ -42,7 +42,6 @@ try:
                     headers={"X-Api-Key": api_key},
                     params={"country": country, "pageSize": 1}
                 )
-            print(r.json())
             if r.status_code == 200:
                 for emailid in json.loads(group["usernames"]):
                     # If request is successful then send out an email
