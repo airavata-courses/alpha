@@ -15,6 +15,7 @@ class Weather extends Component {
         }
       })
       .then(result => {
+        console.log("result", result);
         this.setState({
           isLoaded: true,
           weather: JSON.parse(result.message),
@@ -33,6 +34,7 @@ class Weather extends Component {
 
     this.getWeather = this.getWeather.bind(this);
     this.getWeather();
+
     // this.componentDidMount = this.componentDidMount.bind(this);
   }
 
@@ -69,6 +71,8 @@ class Weather extends Component {
   }
 
   componentDidMount() {
+    this.getWeather();
+
     setInterval(this.getWeather, 300000);
   }
 }

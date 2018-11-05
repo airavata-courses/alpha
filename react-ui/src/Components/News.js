@@ -6,7 +6,7 @@ class News extends Component {
     let country;
 
     console.log("props country", this.props.country);
-    // console.log(this.props.country);
+    //console.log(this.props.country);
     if (this.props.country) {
       country = this.props.country;
       // country = this.props.country;
@@ -45,7 +45,6 @@ class News extends Component {
 
     this.getNews = this.getNews.bind(this);
     this.getNews();
-
     // this.componentDidMount = this.componentDidMount.bind(this);
   }
 
@@ -87,15 +86,17 @@ class News extends Component {
   }
 
   componentDidMount() {
+    this.getNews();
+
     setInterval(() => this.getNews(), 300000);
   }
 
-  componentWillReceiveProps({ country }) {
-    // setInterval(this.getNews, 300000);
-    this.getNews();
-    // setInterval(() => this.getNews(), 1000);
-    // this.getNews;
-  }
+  // componentWillReceiveProps({ country }) {
+  //   // setInterval(this.getNews, 300000);
+  //   this.getNews();
+  //   // setInterval(() => this.getNews(), 1000);
+  //   // this.getNews;
+  // }
 }
 const mapStateToProps = state => {
   console.log("News state", state);

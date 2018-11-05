@@ -70,7 +70,7 @@ class SignUpForm extends React.Component {
       }
     };
     //to check if user already exists, return should be either 409 or -1(to be done)
-    console.log(user);
+    console.log("user", user);
     this.createUser(user).then(userId => {
       // console.log("userid" + userId.message);
       if (userId.status === 409) {
@@ -110,6 +110,8 @@ class SignUpForm extends React.Component {
               <FieldGroup
                 id="useremail"
                 type="email"
+                name="username"
+                defaultValue={this.state.username}
                 label="Email: "
                 onChange={this.onChange}
                 placeholder="Enter text"
@@ -119,6 +121,8 @@ class SignUpForm extends React.Component {
             <div>
               <FieldGroup
                 id="pass"
+                name="password"
+                defaultValue={this.state.password}
                 onChange={this.onChange}
                 type="password"
                 label="Password: "
@@ -129,6 +133,8 @@ class SignUpForm extends React.Component {
             <div>
               <FieldGroup
                 id="pass_con"
+                name="password"
+                defaultValue={this.state.password}
                 onChange={this.onChange}
                 type="password"
                 label="PassConfirm: "
@@ -145,6 +151,8 @@ class SignUpForm extends React.Component {
                 <FormControl
                   componentClass="select"
                   placeholder="select"
+                  name="city"
+                  defaultValue={this.state.city}
                   onChange={this.onChange}
                   id="formControl"
                 >
@@ -168,6 +176,8 @@ class SignUpForm extends React.Component {
                 <FormControl
                   componentClass="select"
                   placeholder="select"
+                  name="country"
+                  defaultValue={this.state.country}
                   onChange={this.onChange}
                   id="formControl"
                 >
@@ -190,6 +200,8 @@ class SignUpForm extends React.Component {
                 <FormControl
                   componentClass="select"
                   placeholder="select"
+                  name="company"
+                  defaultValue={this.state.company}
                   onChange={this.onChange}
                   id="formControl"
                 >
