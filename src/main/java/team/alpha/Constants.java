@@ -5,7 +5,7 @@ import team.alpha.model.GPSLocation;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Constants {
+public abstract class Constants {
 
     public static final Map<String, GPSLocation> GPS_LOCATION = new HashMap<>();
 
