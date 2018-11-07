@@ -11,6 +11,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static team.alpha.Configurations.DB_URL;
+import static team.alpha.Constants.*;
+import static team.alpha.model.ResponseStatus.*;
+
 @RestController
 class DatabaseResource {
 
@@ -27,7 +31,7 @@ class DatabaseResource {
 
     private static void createDBConnection() {
         try {
-            db = DriverManager.getConnection(Constants.DB_URL);
+            db = DriverManager.getConnection(DB_URL);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to create a database connection");
@@ -72,14 +76,14 @@ class DatabaseResource {
             }
 
             if (userId == -1) {
-                return new Response(ResponseStatus.USER_UNAUTHORIZED, Constants.MSG_INVALID_CREDENTIALS);
+                return new Response(USER_UNAUTHORIZED, MSG_INVALID_CREDENTIALS);
             }
 
-            return new Response(ResponseStatus.OK, gson.toJson(userPreferences));
+            return new Response(OK, gson.toJson(userPreferences));
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Response(ResponseStatus.SERVER_ERROR, Constants.MSG_FAILED_TO_FETCH_USER);
+            return new Response(SERVER_ERROR, MSG_FAILED_TO_FETCH_USER);
         }
     }
 
@@ -102,14 +106,14 @@ class DatabaseResource {
             int userId = signupProc.getInt(1);
 
             if (userId == 0) {
-                return new Response(ResponseStatus.USERNAME_CONFLICT, Constants.MSG_USER_ALREADY_EXISTS);
+                return new Response(USERNAME_CONFLICT, MSG_USER_ALREADY_EXISTS);
             }
 
-            return new Response(ResponseStatus.USER_CREATED, userId + "");
+            return new Response(USER_CREATED, userId + "");
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Response(ResponseStatus.SERVER_ERROR, Constants.MSG_FAILED_TO_CREATE_USER);
+            return new Response(SERVER_ERROR, MSG_FAILED_TO_CREATE_USER);
         }
     }
 
@@ -128,11 +132,11 @@ class DatabaseResource {
                 newsSubscribersList.add(newsSubscribers);
             }
 
-            return new Response(ResponseStatus.OK, gson.toJson(newsSubscribersList));
+            return new Response(OK, gson.toJson(newsSubscribersList));
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Response(ResponseStatus.SERVER_ERROR, Constants.MSG_FAILED_TO_FETCH_SUBSCRIBER_LIST);
+            return new Response(SERVER_ERROR, MSG_FAILED_TO_FETCH_SUBSCRIBER_LIST);
         }
     }
 }

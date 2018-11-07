@@ -5,7 +5,12 @@ import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import team.alpha.model.*;
+import team.alpha.model.Credentials;
+import team.alpha.model.Response;
+import team.alpha.model.SignupForm;
+import team.alpha.model.UserPreferences;
+
+import static team.alpha.model.ResponseStatus.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DatabaseResourceTest {
@@ -50,7 +55,7 @@ public class DatabaseResourceTest {
         signupForm.setUserPreferences(userPreferences);
 
         Response response = databaseResource.signup(signupForm);
-        Assert.assertEquals(response.getStatus(), ResponseStatus.USER_CREATED);
+        Assert.assertEquals(response.getStatus(), USER_CREATED);
     }
 
     private void checkSignupFails() {
@@ -69,7 +74,7 @@ public class DatabaseResourceTest {
         signupForm.setUserPreferences(userPreferences);
 
         Response response = databaseResource.signup(signupForm);
-        Assert.assertEquals(response.getStatus(), ResponseStatus.USERNAME_CONFLICT);
+        Assert.assertEquals(response.getStatus(), USERNAME_CONFLICT);
     }
 
     @Test
@@ -84,7 +89,7 @@ public class DatabaseResourceTest {
         credentials.setUsername(username);
         credentials.setPassword(password);
         Response response = databaseResource.login(credentials);
-        Assert.assertEquals(response.getStatus(), ResponseStatus.OK);
+        Assert.assertEquals(response.getStatus(), OK);
     }
 
     private void checkLoginFails() {
@@ -93,13 +98,13 @@ public class DatabaseResourceTest {
         credentials.setUsername(username);
         credentials.setPassword(RandomStringUtils.randomAlphanumeric(16));
         Response response = databaseResource.login(credentials);
-        Assert.assertEquals(response.getStatus(), ResponseStatus.USER_UNAUTHORIZED);
+        Assert.assertEquals(response.getStatus(), USER_UNAUTHORIZED);
     }
 
     @Test
     public void test4getSubscribedUsersForNews() {
         Response response = databaseResource.getSubscribedUsersForNews();
-        Assert.assertEquals(response.getStatus(), ResponseStatus.OK);
+        Assert.assertEquals(response.getStatus(), OK);
     }
 
 }
