@@ -3,6 +3,7 @@ import requests
 import json
 from flask_cors import CORS
 import os
+import time
 
 # Connects to news.org API to get latest news.
 # Requires news.org API key stored in config.json file
@@ -60,16 +61,35 @@ def flask_news(api_key):
 
         except Exception as e:
             print(str(e))
-            abort(500)
 
     return app
+
+
+def zk_heartbeat(heartbeat=30):
+
+    data = json.dumps({
+        "serviceName": "news",
+        "instanceId": "_1",
+        "address": "149.165.170.184",
+        "port": 5000
+    })
+
+    while True:
+        r = requests.put('http://149.165.157.99:8081/service', data=data, headers={'Content-type':'application/json'})
+        print(r.status_code)
+        time.sleep(heartbeat)
 
 
 if __name__ == '__main__':
 
     try:
         app = flask_news(os.environ["NEWS_API_KEY"])
-        app.run(host='0.0.0.0')
+        # fork and if child process make heart beat requests to ZK else start the server
+        newpid = os.fork()
+        if newpid == 0:
+            zk_heartbeat()
+        else:
+            app.run(host='0.0.0.0')
 
     except KeyError as e:
         print("News API key is not set in Environment Variable")
