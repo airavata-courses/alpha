@@ -17,9 +17,10 @@ public abstract class Configurations {
     private static final String ZK_HOST = configProperties.getProperty("zookeeper.host");
     private static final String ZK_PORT = configProperties.getProperty("zookeeper.port");
     public static final String ZK_CONNECTION = ZK_HOST + ":" + ZK_PORT;
-//    static final int DEFAULT_SESSION_TIMEOUT_MS = 60000;
-//    private static final int DEFAULT_CONNECTION_TIMEOUT_MS =
-//            configProperties.getProperty("connection_timeout_ms") != null ? Integer.parseInt(configProperties.getProperty("connection_timeout_ms")) : 30000;
-    public static final String ZK_BASEPATH = "/";
+    public static final String ZK_BASEPATH = "/services";
+
+    //instance cleanup
+    public static final int CLEANUP_PERIOD_MS = 5000;
+    public static final int INSTANCE_REFRESH_PERIOD_MS = Integer.parseInt(configProperties.getProperty("instance_refresh_time_ms"));
 
 }
