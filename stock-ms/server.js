@@ -1,3 +1,7 @@
+const { fork } = require("child_process");
+
+const process = fork("./heartbeat.js");
+
 var io = require("socket.io")();
 
 io.on("connection", client => {
