@@ -24,7 +24,7 @@ public class App {
             curatorFramework.start();
 
             ServiceInstance<Object> serviceInstance = ServiceInstance.builder()
-                    .address(APPLIATION_HOST)
+                    .address(APPLICATION_HOST)
                     .port(APPLICATION_PORT)
                     .name(SERVICE_NAME)
                     .id(INSTANCE_ID)

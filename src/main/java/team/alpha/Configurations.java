@@ -2,20 +2,16 @@ package team.alpha;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.util.Properties;
 
 public abstract class Configurations {
 
     private static Properties configProperties = new Properties();
 
-    public static final String APPLIATION_HOST;
-
     static {
         try {
             InputStream inputStream = Configurations.class.getResourceAsStream("/application.properties");
             configProperties.load(inputStream);
-            APPLIATION_HOST = InetAddress.getLocalHost().getHostAddress();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Configurations could not loaded from properties file");
@@ -27,6 +23,7 @@ public abstract class Configurations {
     }
 
     //application properties
+    public static final String APPLICATION_HOST = configProperties.getProperty("server.host");
     public static final int APPLICATION_PORT = Integer.parseInt(configProperties.getProperty("server.port"));
 
     //database
