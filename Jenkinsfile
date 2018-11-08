@@ -29,7 +29,10 @@ pipeline {
      
     stage('CI') {
       steps {
-         sh 'mvn clean package'
+        sh '''
+        fuser -k 9102/tcp || true
+        mvn clean package
+        '''
       }
     } 
     
