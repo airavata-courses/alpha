@@ -38,7 +38,7 @@ public class App {
                     .start();
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to register the instance to service registry\n" + e);
+            System.out.println("Failed to register the instance to service registry\n" + e.getLocalizedMessage());
         }
 
     }
