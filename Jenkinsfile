@@ -31,6 +31,7 @@ pipeline {
         steps{
             sh '''
             echo "y" | sudo apt-get install postgresql postgresql-contrib
+            fuser -k 9101/tcp || true
             sudo /etc/init.d/postgresql stop
             sudo /etc/init.d/postgresql start
             sudo psql -U postgres < ./dbscripts.sql 
