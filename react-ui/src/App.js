@@ -4,6 +4,15 @@ import "./App.css";
 import { Stocks } from "./Components/Stocks";
 import { News } from "./Components/News";
 import { Weather } from "./Components/Weather";
+import { connect } from "react-redux";
+import { logout } from "./Components/redux/reducer";
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  Redirect
+} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 class App extends Component {
   render() {
@@ -17,8 +26,14 @@ class App extends Component {
             <a class="active" href="/App">
               Home
             </a>
-            {/* <a href="#contact">Contact</a>  */}
-            <a href="/">Log Out</a>
+            <button
+              onClick={() => {
+                this.props.history.push("/");
+                this.props.logout();
+              }}
+            >
+              LogOut
+            </button>
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -54,5 +69,15 @@ class App extends Component {
     );
   }
 }
+const mapDispathToProps = dispatch => {
+  return {
+    logout: () => dispatch(logout())
+  };
+};
 
-export default App;
+App = connect(
+  null,
+  mapDispathToProps
+)(App);
+
+export default withRouter(App);

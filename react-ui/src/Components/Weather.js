@@ -2,8 +2,40 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 class Weather extends Component {
-  getWeather() {
-    fetch("http://149.165.170.138:9102/data")
+  getip() {
+    let res = fetch("http://149.165.157.99:8081/service/weather", {
+      method: "GET"
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          this.setState({
+            isLoaded: false,
+            error: "Error fetching data"
+          });
+        }
+      })
+      .then(result => {
+        return result;
+      });
+    return res;
+  }
+
+  getWeather(port, ip) {
+    let city;
+    if (this.props.city) {
+      city = this.props.city;
+      console.log("weather city", city);
+      // country = this.props.country;
+    } else {
+      city = "";
+    }
+    let url = "http://" + ip + ":" + port + "/data?city=" + city;
+    console.log("weather  url", url);
+    // console.log("inside news" + country);
+
+    fetch("http://" + ip + ":" + port + "/data?city=" + city)
       .then(res => {
         if (res.ok) {
           return res.json();
@@ -33,7 +65,7 @@ class Weather extends Component {
     };
 
     this.getWeather = this.getWeather.bind(this);
-    this.getWeather();
+    // this.getWeather();
 
     // this.componentDidMount = this.componentDidMount.bind(this);
   }
@@ -71,9 +103,17 @@ class Weather extends Component {
   }
 
   componentDidMount() {
-    this.getWeather();
-
-    setInterval(this.getWeather, 300000);
+    let ip;
+    let port;
+    //this.getWeather();
+    this.getip().then(
+      result => {
+        (port = result.port), (ip = result.address);
+      }
+      //
+      // this.getNews(result.port, result.ip)
+    );
+    setInterval(() => this.getWeather(port, ip), 3000);
   }
 }
 

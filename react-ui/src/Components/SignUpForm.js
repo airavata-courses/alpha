@@ -12,8 +12,31 @@ import {
 import { FieldGroup } from "./FieldGroup";
 
 class SignUpForm extends React.Component {
-  createUser(user) {
-    return fetch("http://149.165.169.102:9101/signup", {
+  getip() {
+    let res = fetch("http://149.165.157.99:8081/service/db", {
+      method: "GET"
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          this.setState({
+            isLoaded: false,
+            error: "Error fetching data"
+          });
+        }
+      })
+      .then(result => {
+        return result;
+      });
+    return res;
+  }
+
+  createUser(user, port, ip) {
+    //let url = "http://" + ip + ":" + port + "/data?city=" + city;
+    // console.log("weather  url", url);
+    // console.log("inside news" + country);
+    return fetch("http://" + ip + ":" + port + "/signup", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -70,18 +93,24 @@ class SignUpForm extends React.Component {
       }
     };
     //to check if user already exists, return should be either 409 or -1(to be done)
+    let port;
+    let ip;
     console.log("user", user);
-    this.createUser(user).then(userId => {
-      // console.log("userid" + userId.message);
-      if (userId.status === 409) {
-        console.log("user already exists");
-        alert("user already exists");
-      } else {
-        alert("user created, please click on login");
-        console.log("user created");
-        this.props.history.push("/");
-      }
+    this.getip().then(result => {
+      (port = result.port), (ip = result.address);
+      this.createUser(user, port, ip).then(userId => {
+        // console.log("userid" + userId.message);
+        if (userId.status === 409) {
+          console.log("user already exists");
+          alert("user already exists");
+        } else {
+          alert("user created, please click on login");
+          console.log("user created");
+          this.props.history.push("/");
+        }
+      });
     });
+    console.log("ip", ip);
   }
 
   render() {

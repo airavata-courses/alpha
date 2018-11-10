@@ -3,6 +3,26 @@ import { subscribeToStock } from "./stockclient";
 import { connect } from "react-redux";
 
 class Stocks extends Component {
+  getip() {
+    let res = fetch("http://149.165.157.99:8081/service/stocks", {
+      method: "GET"
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          this.setState({
+            isLoaded: false,
+            error: "Error fetching data"
+          });
+        }
+      })
+      .then(result => {
+        return result;
+      });
+    return res;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,38 +35,17 @@ class Stocks extends Component {
     const callbackFn = function(value) {
       console.log("stock value", value);
       this.setState((prevState, props) => {
-        // if (str == "apple") {
-        //   return {
-        //     appleStock: value
-        //   };
-        // } else if (str == "fb") {
-        //   return {
-        //     fbStock: arg
-        //   };
-        // }
         value = value.toFixed(2);
         return { stockValue: value };
       });
       // }
     }.bind(this);
-    subscribeToStock(this.props.company, callbackFn);
-
-    // const callbackFn = function(value) {
-    //   this.setState((prevState, props) => {
-    //     // if (str == "apple") {
-    //     //   return {
-    //     //     appleStock: value
-    //     //   };
-    //     // } else if (str == "fb") {
-    //     //   return {
-    //     //     fbStock: arg
-    //     //   };
-    //     // }
-    //     return { stockValue: value };
-    //   });
-    //   // }
-    // }.bind(this);
-    // subscribeToStock(this.props.company, callbackFn);
+    this.getip = this.getip.bind(this);
+    // this.getip();
+    console.log("this state result", this.state.result);
+    this.getip().then(result =>
+      subscribeToStock(this.props.company, result, callbackFn)
+    );
     // subscribeToStock(this.props.company, callbackFn);
   }
 

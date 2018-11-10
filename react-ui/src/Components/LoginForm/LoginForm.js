@@ -114,7 +114,7 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => {
-  // console.log("state", state);
+  console.log("login state", state);
   return {
     isLoginPending: state.isLoginPending,
     isLoginSuccess: state.isLoginSuccess,
@@ -127,9 +127,36 @@ const mapStateToProps = state => {
   };
 };
 
+function getip() {
+  let res = fetch("http://149.165.157.99:8081/service/db", {
+    method: "GET"
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        this.setState({
+          isLoaded: false,
+          error: "Error fetching data"
+        });
+      }
+    })
+    .then(result => {
+      return result;
+    });
+  return res;
+}
+
+let ip;
+let port;
+//this.getWeather();
+getip().then(result => {
+  (port = result.port), (ip = result.address);
+});
+
 const mapDispathToProps = dispatch => {
   return {
-    login: (username, password) => dispatch(login(username, password))
+    login: (username, password) => dispatch(login(username, password, ip, port))
   };
 };
 LoginForm = connect(
