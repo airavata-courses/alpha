@@ -63,7 +63,7 @@ public class DatabaseResourceTest {
         signupForm.setUserPreferences(userPreferences);
 
         Response response = databaseResource.signup(signupForm);
-        Assert.assertEquals(response.getStatus(), USER_CREATED);
+        Assert.assertEquals(USER_CREATED, response.getStatus());
     }
 
     private void checkSignupFails() {
@@ -82,7 +82,7 @@ public class DatabaseResourceTest {
         signupForm.setUserPreferences(userPreferences);
 
         Response response = databaseResource.signup(signupForm);
-        Assert.assertEquals(response.getStatus(), USERNAME_CONFLICT);
+        Assert.assertEquals(USERNAME_CONFLICT, response.getStatus());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class DatabaseResourceTest {
         credentials.setUsername(username);
         credentials.setPassword(password);
         Response response = databaseResource.login(credentials);
-        Assert.assertEquals(response.getStatus(), OK);
+        Assert.assertEquals(OK, response.getStatus());
     }
 
     private void checkLoginFails() {
@@ -106,13 +106,13 @@ public class DatabaseResourceTest {
         credentials.setUsername(username);
         credentials.setPassword(RandomStringUtils.randomAlphanumeric(16));
         Response response = databaseResource.login(credentials);
-        Assert.assertEquals(response.getStatus(), USER_UNAUTHORIZED);
+        Assert.assertEquals(USER_UNAUTHORIZED, response.getStatus());
     }
 
     @Test
     public void test4getSubscribedUsersForNews() {
         Response response = databaseResource.getSubscribedUsersForNews();
-        Assert.assertEquals(response.getStatus(), OK);
+        Assert.assertEquals(OK, response.getStatus());
     }
 
     @Test
