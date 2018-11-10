@@ -47,7 +47,7 @@ public class WeatherResourceTest {
     public void test2GetData() {
         doReturn(thirdApiResponse).when(weatherResource).getDataFromThirdParty(any(GPSLocation.class));
         Response response = weatherResource.getData(Constants.BLOOMINGTON);
-        Assert.assertEquals(response.getStatus(), HttpStatus.SC_OK);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatus());
     }
 
     @Test
