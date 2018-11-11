@@ -1,6 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import styles from "./SignUpForm.css";
+import { getip } from "./getip";
 
 import {
   FormControl,
@@ -12,30 +13,7 @@ import {
 import { FieldGroup } from "./FieldGroup";
 
 class SignUpForm extends React.Component {
-  getip() {
-    let res = fetch("http://149.165.157.99:8081/service/db", {
-      method: "GET"
-    })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          this.setState({
-            isLoaded: false,
-            error: "Error fetching data"
-          });
-        }
-      })
-      .then(result => {
-        return result;
-      });
-    return res;
-  }
-
   createUser(user, port, ip) {
-    //let url = "http://" + ip + ":" + port + "/data?city=" + city;
-    // console.log("weather  url", url);
-    // console.log("inside news" + country);
     return fetch("http://" + ip + ":" + port + "/signup", {
       method: "post",
       headers: {
@@ -44,15 +22,16 @@ class SignUpForm extends React.Component {
       body: JSON.stringify(user)
     })
       .then(res => {
-        // console.log("res ", res);
         if (res.ok) {
           return res.json();
         }
       })
 
       .then(result => {
-        // console.log("result", result);
         return result;
+      })
+      .catch(error => {
+        this.setState({ isLoaded: false });
       });
   }
 
@@ -96,10 +75,9 @@ class SignUpForm extends React.Component {
     let port;
     let ip;
     console.log("user", user);
-    this.getip().then(result => {
+    getip("db").then(result => {
       (port = result.port), (ip = result.address);
       this.createUser(user, port, ip).then(userId => {
-        // console.log("userid" + userId.message);
         if (userId.status === 409) {
           console.log("user already exists");
           alert("user already exists");

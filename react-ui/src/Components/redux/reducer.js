@@ -36,6 +36,9 @@ export function login(username, password, ip, port) {
         } else if (result.status === 500) {
           dispatch(setLoginError("Server Error"));
         }
+      })
+      .catch(error => {
+        dispatch(setLoginError("Server Error"));
       });
   };
 }

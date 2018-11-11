@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { login } from "../redux/reducer";
 import "./LoginForm.css";
+import { getip } from "../getip";
 
 import {
   BrowserRouter as Router,
@@ -37,7 +38,6 @@ class LoginForm extends Component {
               <a class="active" href="/App">
                 Home
               </a>
-              {/* <a href="#contact">Contact</a>  */}
               <a href="/signup">SignUp</a>
             </div>
           </div>
@@ -94,14 +94,6 @@ class LoginForm extends Component {
               </span>
             </div>
           </form>
-
-          {/* <button
-          onClick={() => {
-            this.props.history.push("/signup");
-          }}
-        >
-          SignUp
-        </button> */}
         </div>
       </div>
     );
@@ -127,30 +119,9 @@ const mapStateToProps = state => {
   };
 };
 
-function getip() {
-  let res = fetch("http://149.165.157.99:8081/service/db", {
-    method: "GET"
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        this.setState({
-          isLoaded: false,
-          error: "Error fetching data"
-        });
-      }
-    })
-    .then(result => {
-      return result;
-    });
-  return res;
-}
-
 let ip;
 let port;
-//this.getWeather();
-getip().then(result => {
+getip("db").then(result => {
   (port = result.port), (ip = result.address);
 });
 

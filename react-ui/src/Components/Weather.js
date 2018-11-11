@@ -1,40 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { getip } from "./getip";
 
 class Weather extends Component {
-  getip() {
-    let res = fetch("http://149.165.157.99:8081/service/weather", {
-      method: "GET"
-    })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          this.setState({
-            isLoaded: false,
-            error: "Error fetching data"
-          });
-        }
-      })
-      .then(result => {
-        return result;
-      });
-    return res;
-  }
-
   getWeather(port, ip) {
     let city;
     if (this.props.city) {
       city = this.props.city;
       console.log("weather city", city);
-      // country = this.props.country;
     } else {
       city = "";
     }
     let url = "http://" + ip + ":" + port + "/data?city=" + city;
     console.log("weather  url", url);
-    // console.log("inside news" + country);
-
     fetch("http://" + ip + ":" + port + "/data?city=" + city)
       .then(res => {
         if (res.ok) {
@@ -53,6 +31,9 @@ class Weather extends Component {
           weather: JSON.parse(result.message),
           error: 0
         });
+      })
+      .catch(error => {
+        this.setState({ isLoaded: false });
       });
   }
 
@@ -65,16 +46,12 @@ class Weather extends Component {
     };
 
     this.getWeather = this.getWeather.bind(this);
-    // this.getWeather();
 
     // this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   render() {
-    // console.log("inside weather");
     const { error, isLoaded, weather } = this.state;
-    // console.log("weather", weather);
-
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -85,9 +62,6 @@ class Weather extends Component {
           <div style={{ border: "1px solid #ccc", backgroundColor: "Gray" }}>
             <h3>Weather Feed</h3>
           </div>
-          {/* if({weather.shortDesc}==="cloudy"){
-
-          } */}
           <h4>{weather.shortDesc}</h4>
           <p>Description: {weather.description}</p>
           <p>Temperature: {weather.temperature} F</p>
@@ -102,17 +76,25 @@ class Weather extends Component {
     }
   }
 
+  getipport() {
+    let ip;
+    let port;
+    getip("weather").then(result => {
+      console.log("result inside getipweather", result), (port = result.port);
+      ip = result.address;
+    });
+    console.log(`result of getip ip = ${ip} and port = ${port}`);
+
+    return { port: port, ip: ip };
+  }
   componentDidMount() {
     let ip;
     let port;
-    //this.getWeather();
-    this.getip().then(
-      result => {
-        (port = result.port), (ip = result.address);
-      }
-      //
-      // this.getNews(result.port, result.ip)
-    );
+    getip("weather").then(result => {
+      port = result.port;
+      ip = result.address;
+    });
+    console.log(`result of getip ip = ${ip} and port = ${port}`);
     setInterval(() => this.getWeather(port, ip), 3000);
   }
 }
