@@ -17,18 +17,32 @@ try:
 
     api_key = os.environ["NEWS_API_KEY"]
     producer_instance = connect_kafka_producer(config["kafka"]["server"])
+    failed = True
     while True:
         # get data from DB here and do the following for each country. 
         # Store pairs of country and user list so we won't need to do multiple requests
 
+        # Get DB end point if the previous didn't work else we can keep using the older one
+        if failed:
+            r = requests.get(
+                    "http://149.165.157.99:8081/service/db"
+                )
+            
+            if r.status_code == 200:
+                data = r.json()
+
+            db_endpoint = "http://" + data["address"] + ":" + str(data["port"])
+
         # Request for data from the DB endpoint
         r = requests.get(
-                "http://149.165.169.102:9101/newssubscribers"
+                db_endpoint+"/newssubscribers"
             )
 
         if r.status_code == 200 and r.json()["status"] == 200:
             data = r.json()
+            failed = False
         else:
+            failed = True 
             sleep(60)
             continue
         
