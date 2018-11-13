@@ -5,15 +5,13 @@ const getip = function getip(servicename) {
     .then(res => {
       if (res.ok) {
         return res.json();
-      } else {
-        this.setState({
-          isLoaded: false,
-          error: "Error fetching data"
-        });
       }
     })
     .then(result => {
       return result;
+    })
+    .catch(error => {
+      console.log(`error on ${servicename}`);
     });
   return res;
 };
