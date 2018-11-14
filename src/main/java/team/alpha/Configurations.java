@@ -18,5 +18,5 @@ public abstract class Configurations {
     private static final String ZK_PORT = configProperties.getProperty("zookeeper.port");
     public static final String ZK_CONNECTION = ZK_HOST + ":" + ZK_PORT;
     public static final String ZK_BASEPATH = "/services";
-    public static final String[] SERVICE_NAMES = {"news", "weather"};
+    public static final String[] SERVICE_NAMES = {"news", "weather", "stocks"};
 }

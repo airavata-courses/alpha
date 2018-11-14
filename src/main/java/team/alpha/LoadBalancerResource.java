@@ -67,7 +67,7 @@ public class LoadBalancerResource {
 
         try {
 
-            GetRequestThread[] requestThreads = new GetRequestThread[2];
+            GetRequestThread[] requestThreads = new GetRequestThread[3];
 
             ServiceInstance<Object> newsServiceInstance = getRandomInstance("news");
             URI newsURI = new URIBuilder()
@@ -80,15 +80,15 @@ public class LoadBalancerResource {
             requestThreads[0].start();
 
 
-//            ServiceInstance<Object> stocksServiceInstance = getRandomInstance("stocks");
-//            URI stocksURI = new URIBuilder()
-//                    .setScheme("http")
-//                    .setHost(stocksServiceInstance.getAddress())
-//                    .setPort(stocksServiceInstance.getPort())
-//                    .setPath("/")
-//                    .build();
-//            requestThreads[1] = new GetRequestThread(httpClient, stocksURI);
-//            requestThreads[1].start();
+            ServiceInstance<Object> stocksServiceInstance = getRandomInstance("stocks");
+            URI stocksURI = new URIBuilder()
+                    .setScheme("http")
+                    .setHost(stocksServiceInstance.getAddress())
+                    .setPort(stocksServiceInstance.getPort())
+                    .setPath("/stocks/apple")
+                    .build();
+            requestThreads[1] = new GetRequestThread(httpClient, stocksURI);
+            requestThreads[1].start();
 
             ServiceInstance<Object> weatherServiceInstance = getRandomInstance("weather");
             URI weatherURI = new URIBuilder()
@@ -97,8 +97,8 @@ public class LoadBalancerResource {
                     .setPort(weatherServiceInstance.getPort())
                     .setPath("/data")
                     .build();
-            requestThreads[1] = new GetRequestThread(httpClient, weatherURI);
-            requestThreads[1].start();
+            requestThreads[2] = new GetRequestThread(httpClient, weatherURI);
+            requestThreads[2].start();
 
             // join the threads
             for (GetRequestThread requestThread : requestThreads) {
