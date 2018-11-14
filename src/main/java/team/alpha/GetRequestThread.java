@@ -1,5 +1,6 @@
 package team.alpha;
 
+import com.google.common.base.Preconditions;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -29,12 +30,10 @@ public class GetRequestThread extends Thread {
         httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         try (CloseableHttpResponse response = httpClient.execute(httpGet, context)) {
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                EntityUtils.consumeQuietly(response.getEntity());
-            }
+            Preconditions.checkState(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK, "Get request to '%s' failed with status code '%s'", uri, response.getStatusLine().getStatusCode());
+            EntityUtils.consumeQuietly(response.getEntity());
         } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Request to " + uri + " did not complete successfully");
+            throw new RuntimeException("Request to " + uri + " did not complete successfully", ex);
         }
     }
 

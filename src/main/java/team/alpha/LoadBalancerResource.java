@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import team.alpha.model.InstanceStats;
+import team.alpha.model.ServiceStats;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -35,8 +37,9 @@ public class LoadBalancerResource {
     private final ServiceDiscovery<Object> serviceDiscovery;
     private final Map<String, ServiceCache<Object>> serviceCaches = new HashMap<>();
     private Random randomGenerator = new Random();
-    private PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-    private CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(cm).build();
+    private PoolingHttpClientConnectionManager cm;
+    private CloseableHttpClient httpClient;
+    private final HashMap<String, ServiceStats> statistics = new HashMap<>();
 
     public LoadBalancerResource() {
         try {
@@ -54,11 +57,18 @@ public class LoadBalancerResource {
                 ServiceCache<Object> serviceCache = serviceDiscovery.serviceCacheBuilder().name(serviceName).build();
                 serviceCache.start();
                 serviceCaches.put(serviceName, serviceCache);
+                statistics.put(serviceName, new ServiceStats());
             }
+
+            cm = new PoolingHttpClientConnectionManager();
+            cm.setMaxTotal(200);
+            cm.setDefaultMaxPerRoute(20);
+            httpClient = HttpClients.custom().setConnectionManager(cm).build();
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to instantiate Load Balancer Resource object\n" + e.getLocalizedMessage());
         }
+
     }
 
     @CrossOrigin
@@ -66,48 +76,80 @@ public class LoadBalancerResource {
     ResponseEntity<?> testServices() {
 
         try {
-
             GetRequestThread[] requestThreads = new GetRequestThread[3];
 
-            ServiceInstance<Object> newsServiceInstance = getRandomInstance("news");
-            URI newsURI = new URIBuilder()
-                    .setScheme("http")
-                    .setHost(newsServiceInstance.getAddress())
-                    .setPort(newsServiceInstance.getPort())
-                    .setPath("/top_headlines")
-                    .build();
-            requestThreads[0] = new GetRequestThread(httpClient, newsURI);
-            requestThreads[0].start();
+            try {
+                statistics.get("news").incrementRequestsCount();
+                ServiceInstance<Object> newsServiceInstance = getRandomInstance("news");
+                Preconditions.checkNotNull(newsServiceInstance);
+                if (!statistics.get("news").getInstances().containsKey(newsServiceInstance.getId())) {
+                    statistics.get("news").getInstances().put(newsServiceInstance.getId(), new InstanceStats());
+                }
+                statistics.get("news").getInstances().get(newsServiceInstance.getId()).incrementRequestsCount();
 
+                URI newsURI = new URIBuilder()
+                        .setScheme("http")
+                        .setHost(newsServiceInstance.getAddress())
+                        .setPort(newsServiceInstance.getPort())
+                        .setPath("/top_headlines")
+                        .build();
+                requestThreads[0] = new GetRequestThread(httpClient, newsURI);
+                requestThreads[0].start();
+            } catch (Exception e) {
+                statistics.get("news").incrementRequestsFailed();
+                System.out.println(e.getLocalizedMessage());
+            }
 
-            ServiceInstance<Object> stocksServiceInstance = getRandomInstance("stocks");
-            URI stocksURI = new URIBuilder()
-                    .setScheme("http")
-                    .setHost(stocksServiceInstance.getAddress())
-                    .setPort(stocksServiceInstance.getPort())
-                    .setPath("/stocks/apple")
-                    .build();
-            requestThreads[1] = new GetRequestThread(httpClient, stocksURI);
-            requestThreads[1].start();
+            try {
+                statistics.get("stocks").incrementRequestsCount();
+                ServiceInstance<Object> stocksServiceInstance = getRandomInstance("stocks");
+                if (!statistics.get("stocks").getInstances().containsKey(stocksServiceInstance.getId())) {
+                    statistics.get("stocks").getInstances().put(stocksServiceInstance.getId(), new InstanceStats());
+                }
+                statistics.get("stocks").getInstances().get(stocksServiceInstance.getId()).incrementRequestsCount();
 
-            ServiceInstance<Object> weatherServiceInstance = getRandomInstance("weather");
-            URI weatherURI = new URIBuilder()
-                    .setScheme("http")
-                    .setHost(weatherServiceInstance.getAddress())
-                    .setPort(weatherServiceInstance.getPort())
-                    .setPath("/data")
-                    .build();
-            requestThreads[2] = new GetRequestThread(httpClient, weatherURI);
-            requestThreads[2].start();
+                URI stocksURI = new URIBuilder()
+                        .setScheme("http")
+                        .setHost(stocksServiceInstance.getAddress())
+                        .setPort(stocksServiceInstance.getPort())
+                        .setPath("/stocks/apple")
+                        .build();
+                requestThreads[1] = new GetRequestThread(httpClient, stocksURI);
+                requestThreads[1].start();
+            } catch (Exception e) {
+                statistics.get("stocks").incrementRequestsFailed();
+                System.out.println(e.getLocalizedMessage());
+            }
 
-            // join the threads
+            try {
+                statistics.get("weather").incrementRequestsCount();
+                ServiceInstance<Object> weatherServiceInstance = getRandomInstance("weather");
+                if (!statistics.get("weather").getInstances().containsKey(weatherServiceInstance.getId())) {
+                    statistics.get("weather").getInstances().put(weatherServiceInstance.getId(), new InstanceStats());
+                }
+                statistics.get("weather").getInstances().get(weatherServiceInstance.getId()).incrementRequestsCount();
+
+                URI weatherURI = new URIBuilder()
+                        .setScheme("http")
+                        .setHost(weatherServiceInstance.getAddress())
+                        .setPort(weatherServiceInstance.getPort())
+                        .setPath("/data")
+                        .build();
+                requestThreads[2] = new GetRequestThread(httpClient, weatherURI);
+                requestThreads[2].start();
+            } catch (Exception e) {
+                statistics.get("weather").incrementRequestsFailed();
+                System.out.println(e.getLocalizedMessage());
+            }
+
             for (GetRequestThread requestThread : requestThreads) {
                 requestThread.join();
             }
-            return new ResponseEntity(HttpStatus.OK);
+
+            return new ResponseEntity(statistics, HttpStatus.OK);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
 
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
