@@ -1,6 +1,9 @@
 var bodyParser = require("body-parser");
 var routes = require("./api/Routes/routes");
 var cors = require("cors");
+const { fork } = require("child_process");
+
+const process = fork("./heartbeat.js");
 var express = require("express"),
   app = express(),
   port = 8000;
