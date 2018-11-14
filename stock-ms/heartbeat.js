@@ -15,5 +15,4 @@ function zookeep(callback) {
     callback
   );
 }
-zookeep();
 setInterval(zookeep, 30000);
