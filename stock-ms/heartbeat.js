@@ -3,7 +3,7 @@ function zookeep(callback) {
 
   request(
     {
-      url: "http://149.165.157.99:8081/service",
+      url: "http://149.165.157.99:8081/service/",
       method: "PUT",
       json: {
         serviceName: "stocks",
@@ -15,4 +15,5 @@ function zookeep(callback) {
     callback
   );
 }
+zookeep();
 setInterval(zookeep, 30000);
