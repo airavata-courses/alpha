@@ -28,7 +28,7 @@ pipeline {
     stage('Deploy') {
       steps {
          sh '''
-            pkill -f "app.py"
+            pkill -f "app.py" || true
             JENKINS_NODE_COOKIE=dontKillMe python3 app.py &
             '''
       }
