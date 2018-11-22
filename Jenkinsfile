@@ -21,7 +21,7 @@ pipeline {
      
     stage('CI') {
       steps {
-         sh 'unset PYTHONPATH && python -m pytest tests/'
+         sh 'python -m pytest tests/'
       }
     } 
     
