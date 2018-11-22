@@ -28,7 +28,7 @@ pipeline {
     stage('Deploy') {
       steps {
          sh '''
-            fuser -k 5000/tcp || true
+            pkill -f "app.py"
             JENKINS_NODE_COOKIE=dontKillMe python3 app.py &
             '''
       }
