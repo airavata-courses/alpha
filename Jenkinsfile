@@ -13,7 +13,6 @@
     stage('deploy kafka-ms'){
         steps{
             sh '''
-            export EMAIL_ID='siddharthpathak7@gmail.com'
             pkill -f "producer.py" || true
             pkill -f "consumer.py" || true
             rm -rf kafka
