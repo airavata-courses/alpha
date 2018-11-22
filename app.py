@@ -4,10 +4,11 @@ import json
 from flask_cors import CORS
 import os
 import time
+import logging
 
 # Connects to news.org API to get latest news.
 # Requires news.org API key stored in config.json file
-
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 def flask_news(api_key):
 
@@ -19,7 +20,8 @@ def flask_news(api_key):
 
     @app.route('/', methods=['GET'])
     def index():
-        return "Hello, World!"
+        return "Use /top_headlines endpoint to get latest headlines. Add country to get country specific news. " \
+               "Default country is USA."
 
     @app.route('/top_headlines', methods=['GET'])
     def get_news():
@@ -39,6 +41,7 @@ def flask_news(api_key):
 
         try:
             country = request.args.get('country', 'us')
+            logging.info(f"Sending request to get news for country {country}")
             r = requests.get(
                 url + "/top-headlines",
                 headers={"X-Api-Key": api_key},
@@ -46,10 +49,13 @@ def flask_news(api_key):
             )
 
             if r.status_code == 200:
+                logging.info("Get News request completed successfully.")
                 result = {"success": 1, "news": []}
                 for news in r.json()["articles"]:
                     result["news"].append(news["title"])
                 return jsonify(result)
+
+            logging.error(f"Get News request failed. Received status code {r.status.code}")
 
             response = app.response_class(
                 response=json.dumps({"success": 0, "error": "Unable to fetch data"}),
@@ -60,12 +66,15 @@ def flask_news(api_key):
             return response
 
         except Exception as e:
-            print(str(e))
+            logging.exception("Exception occured")
 
     return app
 
 
 def zk_heartbeat(heartbeat=30):
+    """
+        Sends heartbeat to zookeeper every few seconds as per configuration of heartbeat
+    """
 
     data = json.dumps({
         "serviceName": "news",
@@ -75,8 +84,8 @@ def zk_heartbeat(heartbeat=30):
     })
 
     while True:
-        r = requests.put('http://149.165.157.99:8081/service', data=data, headers={'Content-type':'application/json'})
-        print(r.status_code)
+        r = requests.put('http://149.165.157.99:8081/service', data=data, headers={'Content-type': 'application/json'})
+        logging.info(f'Sent heartbeat. Got response {r.status_code}')
         time.sleep(heartbeat)
 
 
