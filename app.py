@@ -55,7 +55,7 @@ def flask_news(api_key):
                     result["news"].append(news["title"])
                 return jsonify(result)
 
-            logging.error(f"Get News request failed. Received status code {r.status.code}")
+            logging.error(f"Get News request failed. Received status code {r.status_code}")
 
             response = app.response_class(
                 response=json.dumps({"success": 0, "error": "Unable to fetch data"}),

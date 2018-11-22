@@ -9,7 +9,7 @@ def test_home():
     test_client = test_app.test_client()
     test_app.testing = True
     home = test_client.get('/')
-    assert b"Hello, World" in home.data
+    assert b"Use /top_headlines endpoint" in home.data
 
 
 def test_news():
@@ -27,3 +27,5 @@ def test_news():
     test_app.testing = True
     news = test_client.get('/top_headlines')
     assert news.status_code != 200
+
+test_home()
