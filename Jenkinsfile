@@ -15,21 +15,21 @@ pipeline {
     }
     stage('Install dependencies') {
       steps {
-        sh 'unset PYTHONPATH && pip install -r requirements.txt'
+        sh 'unset PYTHONPATH && pip3 install -r requirements.txt'
       }
     }
      
     stage('CI') {
       steps {
-         sh 'python -m pytest tests/'
+         sh 'python3 -m pytest tests/'
       }
     } 
     
     stage('Deploy') {
       steps {
          sh '''
-            fuser -k 5000/tcp || true
-            JENKINS_NODE_COOKIE=dontKillMe python app.py &
+            pkill -f "app.py" || true
+            JENKINS_NODE_COOKIE=dontKillMe python3 app.py &
             '''
       }
     }
