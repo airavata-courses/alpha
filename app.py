@@ -5,10 +5,12 @@ from flask_cors import CORS
 import os
 import time
 import logging
+import multiprocessing
 
 # Connects to news.org API to get latest news.
 # Requires news.org API key stored in config.json file
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+
 
 def flask_news(api_key):
 
@@ -78,7 +80,7 @@ def zk_heartbeat(heartbeat=30):
 
     data = json.dumps({
         "serviceName": "news",
-        "instanceId": "_1",
+        "instanceId": "_2",
         "address": "149.165.170.184",
         "port": 5000
     })
@@ -94,11 +96,10 @@ if __name__ == '__main__':
     try:
         app = flask_news(os.environ["NEWS_API_KEY"])
         # fork and if child process make heart beat requests to ZK else start the server
-        newpid = os.fork()
-        if newpid == 0:
-            zk_heartbeat()
-        else:
-            app.run(host='0.0.0.0')
+        p = multiprocessing.Process(target=zk_heartbeat)
+        p.daemon = True
+        p.start()
+        app.run(host='0.0.0.0')
 
     except KeyError as e:
         print("News API key is not set in Environment Variable")
