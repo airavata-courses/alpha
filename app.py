@@ -9,7 +9,7 @@ import multiprocessing
 
 # Connects to news.org API to get latest news.
 # Requires news.org API key stored in config.json file
-logging.basicConfig(filename="/home/ubuntu/news_logs", format="%(asctime)s - %(message)s", level=logging.INFO)
+logging.basicConfig(filename="/var/log/news_logs", format="%(asctime)s - %(message)s", level=logging.INFO)
 
 
 def flask_news(api_key):
