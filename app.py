@@ -9,7 +9,7 @@ import multiprocessing
 
 # Connects to news.org API to get latest news.
 # Requires news.org API key stored in config.json file
-logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+logging.basicConfig(filename="/home/ubuntu/news_logs", format="%(asctime)s - %(message)s", level=logging.INFO)
 
 
 def flask_news(api_key):
@@ -20,12 +20,12 @@ def flask_news(api_key):
     # For removing x_hr warning
     app.config["JSONIFY_PRETTYPRINT_REGULAR"] = False
 
-    @app.route('/', methods=['GET'])
+    @app.route("/", methods=['GET'])
     def index():
         return "Use /top_headlines endpoint to get latest headlines. Add country to get country specific news. " \
                "Default country is USA."
 
-    @app.route('/top_headlines', methods=['GET'])
+    @app.route("/top_headlines", methods=["GET"])
     def get_news():
         """
             Returns top 10 news from news.org API for the input country.
@@ -42,7 +42,7 @@ def flask_news(api_key):
         """
 
         try:
-            country = request.args.get('country', 'us')
+            country = request.args.get("country", "us")
             logging.info(f"Sending request to get news for country {country}")
             r = requests.get(
                 url + "/top-headlines",
@@ -86,12 +86,12 @@ def zk_heartbeat(heartbeat=30):
     })
 
     while True:
-        r = requests.put('http://149.165.157.99:8081/service', data=data, headers={'Content-type': 'application/json'})
-        logging.info(f'Sent heartbeat. Got response {r.status_code}')
+        r = requests.put("http://149.165.157.99:8081/service", data=data, headers={"Content-type": "application/json"})
+        logging.info(f"Sent heartbeat. Got response {r.status_code}")
         time.sleep(heartbeat)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     try:
         app = flask_news(os.environ["NEWS_API_KEY"])
@@ -99,7 +99,7 @@ if __name__ == '__main__':
         p = multiprocessing.Process(target=zk_heartbeat)
         p.daemon = True
         p.start()
-        app.run(host='0.0.0.0')
+        app.run(host="0.0.0.0")
 
     except KeyError as e:
         print("News API key is not set in Environment Variable")
