@@ -11,7 +11,7 @@ import redis
 
 # Connects to news.org API to get latest news.
 # Requires news.org API key stored in config.json file
-logging.basicConfig(filename="/var/tmp/news_logs", format="%(asctime)s - %(message)s", level=logging.INFO)
+logging.basicConfig(filename="/var/tmp/news_logs", format="%(asctime)s - %(message)s", level=logging.ERROR)
 
 
 def flask_news(api_key):
@@ -77,6 +77,7 @@ def flask_news(api_key):
 
         except Exception as e:
             logging.exception("Exception occured")
+            abort(500)
 
     return app
 
