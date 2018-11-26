@@ -6,10 +6,12 @@ import os
 import time
 import logging
 import multiprocessing
+import redis
+
 
 # Connects to news.org API to get latest news.
 # Requires news.org API key stored in config.json file
-logging.basicConfig(filename="/var/tmp/news_logs", format="%(asctime)s - %(message)s", level=logging.ERROR)
+logging.basicConfig(filename="/var/tmp/news_logs", format="%(asctime)s - %(message)s", level=logging.INFO)
 
 
 def flask_news(api_key):
@@ -40,21 +42,27 @@ def flask_news(api_key):
                 ]
             }
         """
-
         try:
             country = request.args.get("country", "us")
-            logging.info(f"Sending request to get news for country {country}")
-            r = requests.get(
-                url + "/top-headlines",
-                headers={"X-Api-Key": api_key},
-                params={"country": country, "pageSize": 10}
-            )
+            redis_client = redis.Redis(host='localhost', port=6379, db=0)
+            if redis_client.get(country) is None:
+                logging.info(f"Sending request to get news for country {country}")
+                r = requests.get(
+                    url + "/top-headlines",
+                    headers={"X-Api-Key": api_key},
+                    params={"country": country, "pageSize": 10}
+                )
 
-            if r.status_code == 200:
-                logging.info("Get News request completed successfully.")
-                result = {"success": 1, "news": []}
-                for news in r.json()["articles"]:
-                    result["news"].append(news["title"])
+                if r.status_code == 200:
+                    logging.info("Get News request completed successfully.")
+                    result = {"success": 1, "news": []}
+                    for news in r.json()["articles"]:
+                        result["news"].append(news["title"])
+                    redis_client.set(country, json.dumps(result["news"]), ex=1800)
+                    return jsonify(result)
+            else:
+                logging.info("Data present in redis, not sending request to API")
+                result = {"success": 1, "news": json.loads(redis_client.get(country))}
                 return jsonify(result)
 
             logging.error(f"Get News request failed. Received status code {r.status_code}")
