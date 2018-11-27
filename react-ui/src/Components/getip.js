@@ -8,10 +8,16 @@ const getip = function getip(servicename) {
       }
     })
     .then(result => {
-      return result;
+      if (result != undefined) {
+        console.log("result in getip for login", result);
+        return result;
+      } else {
+        return "Failed";
+      }
     })
     .catch(error => {
       console.log(`error on ${servicename}`);
+      return "Failed";
     });
   return res;
 };

@@ -122,7 +122,13 @@ const mapStateToProps = state => {
 let ip;
 let port;
 getip("db").then(result => {
-  (port = result.port), (ip = result.address);
+  if (result == "Failed") {
+    console.log("failed");
+  } else {
+    console.log("result in login form after catch", result),
+      (port = result.port),
+      (ip = result.address);
+  }
 });
 
 const mapDispathToProps = dispatch => {

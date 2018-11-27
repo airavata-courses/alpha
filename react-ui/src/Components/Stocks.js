@@ -72,9 +72,7 @@ class Stocks extends Component {
     let port;
     let ip;
     getip("stocks").then(result => {
-      console.log("stocks ip port", result),
-        (port = result.port),
-        (ip = result.address);
+      (port = result.port), (ip = result.address);
     });
     // this.getNews("news");
     setInterval(() => this.getStocks(port, ip), 3000);

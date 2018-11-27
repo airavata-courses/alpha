@@ -84,12 +84,12 @@ class Weather extends Component {
       ip = result.address;
     });
     console.log(`result of getip ip = ${ip} and port = ${port}`);
-
     return { port: port, ip: ip };
   }
   componentDidMount() {
     let ip;
     let port;
+    let statusip = null;
     getip("weather").then(result => {
       port = result.port;
       ip = result.address;

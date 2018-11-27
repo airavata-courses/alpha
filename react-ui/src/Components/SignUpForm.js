@@ -76,17 +76,21 @@ class SignUpForm extends React.Component {
     let ip;
     console.log("user", user);
     getip("db").then(result => {
-      (port = result.port), (ip = result.address);
-      this.createUser(user, port, ip).then(userId => {
-        if (userId.status === 409) {
-          console.log("user already exists");
-          alert("user already exists");
-        } else {
-          alert("user created, please click on login");
-          console.log("user created");
-          this.props.history.push("/");
-        }
-      });
+      if (result == "Failed") {
+        console.log("failed");
+      } else {
+        (port = result.port), (ip = result.address);
+        this.createUser(user, port, ip).then(userId => {
+          if (userId.status === 409) {
+            console.log("user already exists");
+            alert("user already exists");
+          } else {
+            alert("user created, please click on login");
+            console.log("user created");
+            this.props.history.push("/");
+          }
+        });
+      }
     });
     console.log("ip", ip);
   }
