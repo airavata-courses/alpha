@@ -11,14 +11,14 @@ import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.http.ResponseEntity;
 import team.alpha.model.Credentials;
-import team.alpha.model.Response;
 import team.alpha.model.SignupForm;
 import team.alpha.model.UserPreferences;
 
+import static org.springframework.http.HttpStatus.*;
 import static team.alpha.Configurations.ZK_BASEPATH;
 import static team.alpha.Configurations.ZK_CONNECTION;
-import static team.alpha.model.ResponseStatus.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DatabaseResourceTest {
@@ -62,8 +62,8 @@ public class DatabaseResourceTest {
         userPreferences.setSubscribedToWeatherAlerts(subscribedToWeatherAlerts);
         signupForm.setUserPreferences(userPreferences);
 
-        Response response = databaseResource.signup(signupForm);
-        Assert.assertEquals(USER_CREATED, response.getStatus());
+        ResponseEntity response = databaseResource.signup(signupForm);
+        Assert.assertEquals(CREATED, response.getStatusCode());
     }
 
     private void checkSignupFails() {
@@ -81,8 +81,8 @@ public class DatabaseResourceTest {
         userPreferences.setSubscribedToWeatherAlerts(subscribedToWeatherAlerts);
         signupForm.setUserPreferences(userPreferences);
 
-        Response response = databaseResource.signup(signupForm);
-        Assert.assertEquals(USERNAME_CONFLICT, response.getStatus());
+        ResponseEntity response = databaseResource.signup(signupForm);
+        Assert.assertEquals(CONFLICT, response.getStatusCode());
     }
 
     @Test
@@ -96,8 +96,8 @@ public class DatabaseResourceTest {
         Credentials credentials = new Credentials();
         credentials.setUsername(username);
         credentials.setPassword(password);
-        Response response = databaseResource.login(credentials);
-        Assert.assertEquals(OK, response.getStatus());
+        ResponseEntity response = databaseResource.login(credentials);
+        Assert.assertEquals(OK, response.getStatusCode());
     }
 
     private void checkLoginFails() {
@@ -105,14 +105,14 @@ public class DatabaseResourceTest {
         Credentials credentials = new Credentials();
         credentials.setUsername(username);
         credentials.setPassword(RandomStringUtils.randomAlphanumeric(16));
-        Response response = databaseResource.login(credentials);
-        Assert.assertEquals(USER_UNAUTHORIZED, response.getStatus());
+        ResponseEntity response = databaseResource.login(credentials);
+        Assert.assertEquals(UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
     public void test4getSubscribedUsersForNews() {
-        Response response = databaseResource.getSubscribedUsersForNews();
-        Assert.assertEquals(OK, response.getStatus());
+        ResponseEntity response = databaseResource.getSubscribedUsersForNews();
+        Assert.assertEquals(OK, response.getStatusCode());
     }
 
     @Test

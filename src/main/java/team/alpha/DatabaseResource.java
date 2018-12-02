@@ -1,24 +1,26 @@
 package team.alpha;
 
-import clover.com.google.gson.Gson;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import team.alpha.model.*;
+import team.alpha.model.Credentials;
+import team.alpha.model.NewsSubscribers;
+import team.alpha.model.SignupForm;
+import team.alpha.model.UserPreferences;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.*;
 import static team.alpha.Configurations.DB_URL;
 import static team.alpha.Constants.*;
-import static team.alpha.model.ResponseStatus.*;
 
 @RestController
 class DatabaseResource {
 
-    private Gson gson = new Gson();
     private static Connection db;
     private CallableStatement loginProc;
     private CallableStatement signupProc;
@@ -54,7 +56,7 @@ class DatabaseResource {
 
     @CrossOrigin
     @RequestMapping("/login")
-    Response login(@RequestBody Credentials credentials) {
+    ResponseEntity<?> login(@RequestBody Credentials credentials) {
         int userId = -1;
         UserPreferences userPreferences = new UserPreferences();
 
@@ -76,20 +78,20 @@ class DatabaseResource {
             }
 
             if (userId == -1) {
-                return new Response(USER_UNAUTHORIZED, MSG_INVALID_CREDENTIALS);
+                return new ResponseEntity<>(MSG_INVALID_CREDENTIALS, UNAUTHORIZED);
             }
 
-            return new Response(OK, gson.toJson(userPreferences));
+            return new ResponseEntity<>(userPreferences, OK);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Response(SERVER_ERROR, MSG_FAILED_TO_FETCH_USER);
+            return new ResponseEntity<>(MSG_FAILED_TO_FETCH_USER, INTERNAL_SERVER_ERROR);
         }
     }
 
     @CrossOrigin
     @RequestMapping("/signup")
-    Response signup(@RequestBody SignupForm signupForm) {
+    ResponseEntity<?> signup(@RequestBody SignupForm signupForm) {
 
         try {
             signupProc.setString(2, signupForm.getCredentials().getUsername());
@@ -106,20 +108,20 @@ class DatabaseResource {
             int userId = signupProc.getInt(1);
 
             if (userId == 0) {
-                return new Response(USERNAME_CONFLICT, MSG_USER_ALREADY_EXISTS);
+                return new ResponseEntity<>(MSG_USER_ALREADY_EXISTS, CONFLICT);
             }
 
-            return new Response(USER_CREATED, userId + "");
+            return new ResponseEntity<>(userId, CREATED);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Response(SERVER_ERROR, MSG_FAILED_TO_CREATE_USER);
+            return new ResponseEntity<>(MSG_FAILED_TO_CREATE_USER, INTERNAL_SERVER_ERROR);
         }
     }
 
     @CrossOrigin
     @RequestMapping("/newssubscribers")
-    Response getSubscribedUsersForNews() {
+    ResponseEntity<?> getSubscribedUsersForNews() {
 
         List<NewsSubscribers> newsSubscribersList = new ArrayList<>();
         try {
@@ -132,11 +134,11 @@ class DatabaseResource {
                 newsSubscribersList.add(newsSubscribers);
             }
 
-            return new Response(OK, gson.toJson(newsSubscribersList));
+            return new ResponseEntity<>(newsSubscribersList, OK);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Response(SERVER_ERROR, MSG_FAILED_TO_FETCH_SUBSCRIBER_LIST);
+            return new ResponseEntity<>(MSG_FAILED_TO_FETCH_SUBSCRIBER_LIST, OK);
         }
     }
 }
