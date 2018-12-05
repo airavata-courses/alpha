@@ -3,3 +3,4 @@
 *.jar
 *.jar.original
 target/
+.DS_Store
