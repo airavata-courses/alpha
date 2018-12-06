@@ -89,7 +89,7 @@ def zk_heartbeat(heartbeat=30):
 
     data = json.dumps({
         "serviceName": "news",
-        "instanceId": "_2",
+        "instanceId": "_1",
         "address": "149.165.170.184",
         "port": 5000
     })
