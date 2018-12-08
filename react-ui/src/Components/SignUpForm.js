@@ -81,7 +81,7 @@ class SignUpForm extends React.Component {
       } else {
         (port = result.port), (ip = result.address);
         this.createUser(user, port, ip).then(userId => {
-          if (userId.status === 409) {
+          if (userId === 409) {
             console.log("user already exists");
             alert("user already exists");
           } else {

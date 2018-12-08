@@ -18,7 +18,11 @@ export function login(username, password, ip, port) {
     })
       .then(res => res.json())
       .then(result => {
-        if (result.status === 200) {
+        if (result === 401) {
+          dispatch(setLoginError("Invalid User Credentials"));
+        } else if (result === 500) {
+          dispatch(setLoginError("Server Error"));
+        } else {
           console.log("result", result);
           let message = JSON.parse(result.message);
           dispatch(setLoginSuccess(true));
@@ -31,10 +35,6 @@ export function login(username, password, ip, port) {
               subscribedToWeatherAlerts: message.subscribedToWeatherAlerts
             })
           );
-        } else if (result.status === 401) {
-          dispatch(setLoginError("Invalid User Credentials"));
-        } else if (result.status === 500) {
-          dispatch(setLoginError("Server Error"));
         }
       })
       .catch(error => {
