@@ -9,7 +9,8 @@ class Weather extends Component {
       city = this.props.city;
       console.log("weather city", city);
     } else {
-      city = "";
+      console.log("weather city default", city);
+      city = "Bloomington, IN";
     }
     let url = "http://" + ip + ":" + port + "/data?city=" + city;
     console.log("weather  url", url);
@@ -28,7 +29,7 @@ class Weather extends Component {
         console.log("result", result);
         this.setState({
           isLoaded: true,
-          weather: JSON.parse(result.message),
+          weather: result,
           error: 0
         });
       })
@@ -46,6 +47,13 @@ class Weather extends Component {
     };
 
     this.getWeather = this.getWeather.bind(this);
+    let ip, port;
+    console.log("weather react");
+    getip("weather").then(result => {
+      port = result.port;
+      ip = result.address;
+      this.getWeather(port, ip);
+    });
 
     // this.componentDidMount = this.componentDidMount.bind(this);
   }
@@ -76,16 +84,16 @@ class Weather extends Component {
     }
   }
 
-  getipport() {
-    let ip;
-    let port;
-    getip("weather").then(result => {
-      console.log("result inside getipweather", result), (port = result.port);
-      ip = result.address;
-    });
-    console.log(`result of getip ip = ${ip} and port = ${port}`);
-    return { port: port, ip: ip };
-  }
+  // getipport() {
+  //   let ip;
+  //   let port;
+  //   getip("weather").then(result => {
+  //     console.log("result inside getipweather", result), (port = result.port);
+  //     ip = result.address;
+  //   });
+  //   console.log(`result of getip ip = ${ip} and port = ${port}`);
+  //   return { port: port, ip: ip };
+  // }
   componentDidMount() {
     let ip;
     let port;
@@ -94,6 +102,7 @@ class Weather extends Component {
       port = result.port;
       ip = result.address;
     });
+    // this.getWeather(port, ip);
     console.log(`result of getip ip = ${ip} and port = ${port}`);
     setInterval(() => this.getWeather(port, ip), 3000);
   }

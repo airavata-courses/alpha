@@ -16,28 +16,34 @@ export function login(username, password, ip, port) {
       },
       body: JSON.stringify({ username: username, password: password })
     })
-      .then(res => res.json())
-      .then(result => {
-        if (result === 401) {
+      .then(res => {
+        console.log(res.status);
+        if (res.ok) {
+          return res.json();
+        } else if (res.status == "401" || res.status == "403") {
           dispatch(setLoginError("Invalid User Credentials"));
-        } else if (result === 500) {
+        } else if (res.status == "500") {
           dispatch(setLoginError("Server Error"));
-        } else {
-          console.log("result", result);
-          let message = JSON.parse(result.message);
-          dispatch(setLoginSuccess(true));
-          dispatch(
-            setUserPreference({
-              city: message.city,
-              country: message.country,
-              company: message.company,
-              subscribedToNewsAlerts: message.subscribedToNewsAlerts,
-              subscribedToWeatherAlerts: message.subscribedToWeatherAlerts
-            })
-          );
         }
       })
+      .then(result => {
+        dispatch(setLoginError(null));
+        console.log("result in reducer", result);
+        dispatch(setLoginSuccess(true));
+        dispatch(
+          setUserPreference({
+            city: result.city,
+            country: result.country,
+            company: result.company,
+            subscribedToNewsAlerts: result.subscribedToNewsAlerts,
+            subscribedToWeatherAlerts: result.subscribedToWeatherAlerts
+          })
+        );
+        return result;
+      })
+
       .catch(error => {
+        console.log("error in login");
         dispatch(setLoginError("Server Error"));
       });
   };

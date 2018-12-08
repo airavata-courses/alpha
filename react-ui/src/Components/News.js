@@ -88,7 +88,9 @@ class News extends Component {
     let port;
     let ip;
     getip("news").then(result => {
-      (port = result.port), (ip = result.address);
+      console.log("news ip port", result),
+        (port = result.port),
+        (ip = result.address);
     });
     // this.getNews("news");
     setInterval(() => this.getNews(port, ip), 3000);

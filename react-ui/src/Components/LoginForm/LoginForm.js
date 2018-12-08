@@ -102,6 +102,7 @@ class LoginForm extends Component {
     e.preventDefault();
     let { username, password } = this.state;
     this.props.login(username, password);
+    // .then(result => console.log("console login results", result));
   };
 }
 
