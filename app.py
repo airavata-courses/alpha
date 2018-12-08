@@ -44,7 +44,7 @@ def flask_news(api_key):
         """
         try:
             country = request.args.get("country", "us")
-            redis_client = redis.Redis(host='localhost', port=6379, db=0)
+            redis_client = redis.Redis(host='redis-news', port=6379, db=0)
             if redis_client.get(country) is None:
                 logging.info(f"Sending request to get news for country {country}")
                 r = requests.get(
@@ -111,4 +111,4 @@ if __name__ == "__main__":
         app.run(host="0.0.0.0")
 
     except KeyError as e:
-        print("News API key is not set in Environment Variable")
+        print("News API key is not set in Environment variable")
