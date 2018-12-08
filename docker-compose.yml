@@ -5,7 +5,7 @@ services:
       build: './test_postgres'
       restart: always
       ports:
-        - "5433:5432"
+        - "5432:5432"
       environment:
         POSTGRES_USER: demo
         POSTGRES_PASSWORD: p@ssw0rd
@@ -14,7 +14,7 @@ services:
     ms:
       build: '.'
       ports:
-        - "9100:9101"
+        - "9101:9101"
       links:
         - db
       depends_on:
