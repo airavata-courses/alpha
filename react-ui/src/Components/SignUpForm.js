@@ -24,10 +24,19 @@ class SignUpForm extends React.Component {
       .then(res => {
         if (res.ok) {
           return res.json();
+        } else if (res.status == "401" || res.status == "403") {
+          console.log("error");
+          this.setState({ isLoaded: false });
+          return "Error";
+        } else if (res.status == "500") {
+          console.log("error");
+          this.setState({ isLoaded: false });
+          return "Error";
         }
       })
 
       .then(result => {
+        console.log(result);
         return result;
       })
       .catch(error => {
@@ -53,7 +62,7 @@ class SignUpForm extends React.Component {
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
-    console.log("onchange", e.target.value);
+    //console.log("onchange", e.target.value);
   }
 
   onSubmit(e) {
@@ -74,25 +83,27 @@ class SignUpForm extends React.Component {
     //to check if user already exists, return should be either 409 or -1(to be done)
     let port;
     let ip;
-    console.log("user", user);
+    //("user", user);
     getip("db").then(result => {
-      if (result == "Failed") {
+      if (result == "Failed" || result == "Error") {
         console.log("failed");
       } else {
         (port = result.port), (ip = result.address);
         this.createUser(user, port, ip).then(userId => {
           if (userId === 409) {
-            console.log("user already exists");
+            //console.log("user already exists");
             alert("user already exists");
+          } else if (userId == "Error") {
+            alert("Server Error");
           } else {
             alert("user created, please click on login");
-            console.log("user created");
+            //console.log("user created");
             this.props.history.push("/");
           }
         });
       }
     });
-    console.log("ip", ip);
+    //("ip", ip);
   }
 
   render() {

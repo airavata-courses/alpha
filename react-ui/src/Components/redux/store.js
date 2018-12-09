@@ -1,10 +1,16 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import logger from "redux-logger";
-import rootReducer from "./reducer";
+// import rootReducer from "./reducer";
+import { WeatherReducer } from "../redux/weatherReducer";
+import { NewsReducer } from "../redux/newsReducer";
+import { StocksReducer } from "../redux/stocksReducer";
+import { UserReducer } from "../redux/reducer";
 import { persistStore, persistReducer } from "redux-persist";
+import { combineReducers } from "redux";
 
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web and AsyncStorage for react-native
+import { News } from "../News";
 
 // const tempstore = createStore(
 //   reducer,
@@ -29,7 +35,12 @@ const enhancer = composeEnhancers(
   applyMiddleware(thunk, logger)
   // other store enhancers if any
 );
-
+const rootReducer = combineReducers({
+  UserReducer: UserReducer,
+  WeatherReducer: WeatherReducer,
+  NewsReducer: NewsReducer,
+  StocksReducer: StocksReducer
+});
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export default () => {

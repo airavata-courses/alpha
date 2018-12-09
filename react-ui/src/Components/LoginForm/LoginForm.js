@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { login } from "../redux/reducer";
+import { getWeather, getweatheripport } from "../redux/weatherReducer";
+import { getNews, getnewsipport } from "../redux/newsReducer";
+import { getStocks, getstocksipport } from "../redux/stocksReducer";
 import "./LoginForm.css";
 import { getip } from "../getip";
 
@@ -21,8 +24,13 @@ class LoginForm extends Component {
       isLoaded: false,
       credentials: {}
     };
+    console.log("before weather");
+    this.props.getweatheripport();
+    console.log("weather ip", this.props.weather_ip);
+    this.props.getnewsipport();
+    console.log("after news");
+    this.props.getstocksipport();
   }
-
   render() {
     let { username, password } = this.state;
     let { isLoginPending, isLoginSuccess, loginError } = this.props;
@@ -101,45 +109,60 @@ class LoginForm extends Component {
   onSubmit = e => {
     e.preventDefault();
     let { username, password } = this.state;
-    this.props.login(username, password);
-    // .then(result => console.log("console login results", result));
+    this.props
+      .login(username, password, "149.165.169.102", 9101)
+      .then(result => {
+        this.props.getWeather(
+          this.props.weather_ip,
+          this.props.weather_port,
+          result.city
+        );
+        this.props.getNews(
+          this.props.news_ip,
+          this.props.news_port,
+          result.country
+        );
+        this.props.getStocks(
+          this.props.stocks_ip,
+          this.props.stocks_port,
+          result.company
+        );
+      });
   };
 }
 
 const mapStateToProps = state => {
-  console.log("login state", state);
   return {
-    isLoginPending: state.isLoginPending,
-    isLoginSuccess: state.isLoginSuccess,
-    loginError: state.loginError,
-    city: state.userPreferences.city,
-    country: state.userPreferences.country,
-    company: state.userPreferences.company,
-    subscribedToNewsAlerts: state.userPreferences.subscribedToNewsAlerts,
-    subscribedToWeatherAlerts: state.userPreferences.subscribedToWeatherAlerts
+    isLoginPending: state.UserReducer.isLoginPending,
+    isLoginSuccess: state.UserReducer.isLoginSuccess,
+    loginError: state.UserReducer.loginError,
+    city: state.UserReducer.userPreferences.city,
+    country: state.UserReducer.userPreferences.country,
+    company: state.UserReducer.userPreferences.company,
+    subscribedToNewsAlerts:
+      state.UserReducer.userPreferences.subscribedToNewsAlerts,
+    subscribedToWeatherAlerts:
+      state.UserReducer.userPreferences.subscribedToWeatherAlerts,
+    weather_ip: state.WeatherReducer.ip,
+    weather_port: state.WeatherReducer.port,
+    news_ip: state.NewsReducer.ip,
+    news_port: state.NewsReducer.port,
+    stocks_ip: state.StocksReducer.ip,
+    stocks_port: state.StocksReducer.port
   };
 };
 
-let ip;
-let port;
-getip("db").then(result => {
-  if (result == "Failed") {
-    console.log("failed");
-  } else {
-    console.log("result in login form after catch", result),
-      (port = result.port),
-      (ip = result.address);
-  }
-});
-
-const mapDispathToProps = dispatch => {
-  return {
-    login: (username, password) => dispatch(login(username, password, ip, port))
-  };
-};
 LoginForm = connect(
   mapStateToProps,
-  mapDispathToProps
+  {
+    login,
+    getweatheripport,
+    getnewsipport,
+    getstocksipport,
+    getWeather,
+    getNews,
+    getStocks
+  }
 )(LoginForm);
 
 export default withRouter(LoginForm);

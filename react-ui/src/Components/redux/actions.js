@@ -1,0 +1,27 @@
+export const SET_LOGIN_PENDING = "SET_LOGIN_PENDING";
+
+export const SET_LOGIN_SUCCESS = "SET_LOGIN_SUCCESS";
+
+export const SET_LOGIN_ERROR = "SET_LOGIN_ERROR";
+
+export const SET_LOGOUT = "SET_LOGOUT";
+
+export const SET_USER_PREFERENCE = "SET_USER_PREFERENCE";
+
+export const SET_WEATHER = "SET_WEATHER";
+
+export const SET_WEATHER_IP_PORT = "SET_WEATHER_IP_PORT";
+
+export const SET_WEATHER_ERROR = "SET_WEATHER_ERROR";
+
+export const SET_NEWS = "SET_NEWS";
+
+export const SET_NEWS_IP_PORT = "SET_NEWS_IP_PORT";
+
+export const SET_NEWS_ERROR = "SET_NEWS_ERROR";
+
+export const SET_STOCKS = "SET_STOCKS";
+
+export const SET_STOCKS_IP_PORT = "SET_STOCKS_IP_PORT";
+
+export const SET_STOCKS_ERROR = "SET_STOCKS_ERROR";

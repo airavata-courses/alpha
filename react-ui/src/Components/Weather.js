@@ -1,69 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getip } from "./getip";
+import { getWeather } from "./redux/weatherReducer";
 
 class Weather extends Component {
-  getWeather(port, ip) {
-    let city;
-    if (this.props.city) {
-      city = this.props.city;
-      console.log("weather city", city);
-    } else {
-      console.log("weather city default", city);
-      city = "Bloomington, IN";
-    }
-    let url = "http://" + ip + ":" + port + "/data?city=" + city;
-    console.log("weather  url", url);
-    fetch("http://" + ip + ":" + port + "/data?city=" + city)
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          this.setState({
-            isLoaded: false,
-            error: "Error fetching data"
-          });
-        }
-      })
-      .then(result => {
-        console.log("result", result);
-        this.setState({
-          isLoaded: true,
-          weather: result,
-          error: 0
-        });
-      })
-      .catch(error => {
-        this.setState({ isLoaded: false });
-      });
-  }
-
   constructor(props) {
     super(props);
-    this.state = {
-      error: null,
-      isLoaded: false,
-      weather: {}
-    };
-
-    this.getWeather = this.getWeather.bind(this);
-    let ip, port;
-    console.log("weather react");
-    getip("weather").then(result => {
-      port = result.port;
-      ip = result.address;
-      this.getWeather(port, ip);
-    });
-
-    // this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   render() {
-    const { error, isLoaded, weather } = this.state;
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
-      return <div>Loading...</div>;
+    const { weather } = this.props;
+    if (this.props.error) {
+      return <div>Error: {this.props.error}</div>;
+    } else if (Object.keys(this.props.weather).length === 0) {
+      return <div>Failed to fetch</div>;
     } else {
       return (
         <div style={{ width: "90%" }}>
@@ -84,39 +34,31 @@ class Weather extends Component {
     }
   }
 
-  // getipport() {
-  //   let ip;
-  //   let port;
-  //   getip("weather").then(result => {
-  //     console.log("result inside getipweather", result), (port = result.port);
-  //     ip = result.address;
-  //   });
-  //   console.log(`result of getip ip = ${ip} and port = ${port}`);
-  //   return { port: port, ip: ip };
-  // }
   componentDidMount() {
-    let ip;
-    let port;
-    let statusip = null;
-    getip("weather").then(result => {
-      port = result.port;
-      ip = result.address;
-    });
-    // this.getWeather(port, ip);
-    console.log(`result of getip ip = ${ip} and port = ${port}`);
-    setInterval(() => this.getWeather(port, ip), 3000);
+    setInterval(
+      () =>
+        this.props.getWeather(this.props.ip, this.props.port, this.props.city),
+      30000
+    );
   }
 }
 
 const mapStateToProps = state => {
-  console.log("state in weather", state);
   return {
-    city: state.userPreferences.city,
-    country: state.userPreferences.country,
-    company: state.userPreferences.company,
-    subscribedToNewsAlerts: state.userPreferences.subscribedToNewsAlerts
+    city: state.UserReducer.userPreferences.city,
+    country: state.UserReducer.userPreferences.country,
+    company: state.UserReducer.userPreferences.company,
+    subscribedToNewsAlerts:
+      state.UserReducer.userPreferences.subscribedToNewsAlerts,
+    ip: state.WeatherReducer.ip,
+    port: state.WeatherReducer.port,
+    error: state.WeatherReducer.error,
+    weather: state.WeatherReducer.weather
   };
 };
 
-Weather = connect(mapStateToProps)(Weather);
+Weather = connect(
+  mapStateToProps,
+  { getWeather }
+)(Weather);
 export { Weather };

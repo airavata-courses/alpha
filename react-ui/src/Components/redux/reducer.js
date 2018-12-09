@@ -1,14 +1,16 @@
-const SET_LOGIN_PENDING = "SET_LOGIN_PENDING";
-const SET_LOGIN_SUCCESS = "SET_LOGIN_SUCCESS";
-const SET_LOGIN_ERROR = "SET_LOGIN_ERROR";
-const SET_LOGOUT = "SET_LOGOUT";
-const SET_USER_PREFERENCE = "SET_USER_PREFERENCE";
+import {
+  SET_LOGIN_PENDING,
+  SET_LOGIN_SUCCESS,
+  SET_LOGIN_ERROR,
+  SET_LOGOUT,
+  SET_USER_PREFERENCE
+} from "./actions";
 
 //set state
-export function login(username, password, ip, port) {
-  return dispatch => {
-    // console.log("inside news" + country);
-
+export const login = (username, password, ip, port) => dispatch =>
+  new Promise((resolve, reject) => {
+    console.log("ip", ip);
+    console.log("port", port);
     fetch("http://" + ip + ":" + port + "/login", {
       method: "post",
       headers: {
@@ -17,7 +19,6 @@ export function login(username, password, ip, port) {
       body: JSON.stringify({ username: username, password: password })
     })
       .then(res => {
-        console.log(res.status);
         if (res.ok) {
           return res.json();
         } else if (res.status == "401" || res.status == "403") {
@@ -27,8 +28,7 @@ export function login(username, password, ip, port) {
         }
       })
       .then(result => {
-        dispatch(setLoginError(null));
-        console.log("result in reducer", result);
+        console.log("result in login state is ", result);
         dispatch(setLoginSuccess(true));
         dispatch(
           setUserPreference({
@@ -39,18 +39,17 @@ export function login(username, password, ip, port) {
             subscribedToWeatherAlerts: result.subscribedToWeatherAlerts
           })
         );
-        return result;
+        resolve(result);
       })
-
       .catch(error => {
-        console.log("error in login");
         dispatch(setLoginError("Server Error"));
+        reject(error);
       });
-  };
-}
+  });
 
 export function logout() {
   return dispatch => {
+    //console.log("dispatch logout");
     dispatch(setLogout());
   };
 }
@@ -88,28 +87,34 @@ function setLoginError(loginError) {
   };
 }
 
-var dict = {};
+// //set weather fetch from the url and set
+// function getWeather(city, ip, port){
+//   fetch(`http://${ip}:${port}/data?city=${city}`)
+//   .then(res => {
+//     if(res.ok()){
 
-dict["admin@example.com"] = "admin";
-dict["adhage@iu.edu"] = "adhage";
-dict["sidpath@iu.edu"] = "sidpath";
-dict["hardik@iu.edu"] = "hardik";
+//     }
+//   })
+// }
 
 const initialState = {
   isLoginSuccess: false,
   isLoginPending: false,
   loginError: null,
   logout: false,
+  weather: null,
+  news: null,
+  stocks: null,
   userPreferences: {
     city: "",
     country: "",
-    company: "apple",
+    company: "",
     subscribedToNewsAlerts: false,
     subscribedToWeatherAlerts: false
   }
 };
 
-export default function reducer(state = initialState, action) {
+export const UserReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_LOGIN_PENDING:
       return {
@@ -139,4 +144,4 @@ export default function reducer(state = initialState, action) {
     default:
       return state;
   }
-}
+};
