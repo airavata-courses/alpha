@@ -44,7 +44,7 @@ def flask_news(api_key):
         """
         try:
             country = request.args.get("country", "us")
-            redis_client = redis.Redis(host='redis-news', port=6379, db=0)
+            redis_client = redis.Redis(host="149.165.170.184", port=6379, db=0)
             if redis_client.get(country) is None:
                 logging.info(f"Sending request to get news for country {country}")
                 r = requests.get(
@@ -81,33 +81,10 @@ def flask_news(api_key):
 
     return app
 
-
-def zk_heartbeat(heartbeat=30):
-    """
-        Sends heartbeat to zookeeper every few seconds as per configuration of heartbeat
-    """
-
-    data = json.dumps({
-        "serviceName": "news",
-        "instanceId": "_1",
-        "address": "149.165.170.184",
-        "port": 5000
-    })
-
-    while True:
-        r = requests.put("http://149.165.157.99:8081/service", data=data, headers={"Content-type": "application/json"})
-        logging.info(f"Sent heartbeat. Got response {r.status_code}")
-        time.sleep(heartbeat)
-
-
 if __name__ == "__main__":
 
     try:
         app = flask_news(os.environ["NEWS_API_KEY"])
-        # fork and if child process make heart beat requests to ZK else start the server
-        p = multiprocessing.Process(target=zk_heartbeat)
-        p.daemon = True
-        p.start()
         app.run(host="0.0.0.0")
 
     except KeyError as e:
