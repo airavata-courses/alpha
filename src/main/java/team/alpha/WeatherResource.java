@@ -48,6 +48,29 @@ public class WeatherResource {
     }
 
     @CrossOrigin
+    @RequestMapping("/news")
+    ResponseEntity getNews() {
+        try {
+            HttpGet request = new HttpGet("http://news:5000/top_headlines");
+            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            HttpResponse response = httpClient.execute(request);
+            int statusCode = response.getStatusLine().getStatusCode();
+
+            if (statusCode == OK.value()) {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    return new ResponseEntity<>("dns resolved successfully", OK);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(ERROR_MSG, INTERNAL_SERVER_ERROR);
+    }
+
+    @CrossOrigin
     @RequestMapping("/data")
     ResponseEntity getData(
             @RequestParam(value = "city", defaultValue = BLOOMINGTON) String city) {
