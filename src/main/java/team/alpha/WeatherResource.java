@@ -9,7 +9,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static org.springframework.http.HttpStatus.*;
 import static team.alpha.Constants.*;
 
 @RestController
@@ -54,13 +54,13 @@ public class WeatherResource {
 
         try {
             if (!weatherDataMap.containsKey(city)) {
-                return new ResponseEntity<>(new ErrorMessage(ERROR_BAD_CITY), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ErrorMessage(ERROR_BAD_CITY), NOT_FOUND);
             }
 
-            return new ResponseEntity<>(weatherDataMap.get(city), HttpStatus.OK);
+            return new ResponseEntity<>(weatherDataMap.get(city), OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ERROR_MSG, INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -73,7 +73,7 @@ public class WeatherResource {
                 HttpResponse response = httpClient.execute(request);
                 int statusCode = response.getStatusLine().getStatusCode();
 
-                if (statusCode == HttpStatus.OK.value()) {
+                if (statusCode == OK.value()) {
                     HttpEntity entity = response.getEntity();
                     if (entity != null) {
                         OpenWeatherMapData thirdPartyData = gson.fromJson(EntityUtils.toString(entity), OpenWeatherMapData.class);
