@@ -10,7 +10,7 @@ let initialState = {
 
 export function getNews(ip, port, country) {
   return dispatch => {
-    fetch("http://149.165.157.60:30002/top_headlines")
+    fetch("http://149.165.157.60:30002/top_headlines?country=" + country)
       .then(res => {
         if (res.ok) {
           return res.json();

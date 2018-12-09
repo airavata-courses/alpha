@@ -11,7 +11,8 @@ export const login = (username, password, ip, port) => dispatch =>
   new Promise((resolve, reject) => {
     console.log("ip", ip);
     console.log("port", port);
-    fetch("http://" + ip + ":" + port + "/login", {
+    // fetch("http://" + ip + ":" + port + "/login", {
+    fetch("http://db:9101", {
       method: "post",
       headers: {
         "Content-Type": "application/json"

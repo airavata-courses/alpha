@@ -14,7 +14,8 @@ import { FieldGroup } from "./FieldGroup";
 
 class SignUpForm extends React.Component {
   createUser(user, port, ip) {
-    return fetch("http://" + ip + ":" + port + "/signup", {
+    // return fetch("http://" + ip + ":" + port + "/signup", {
+    return fetch("http://db:9101", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
