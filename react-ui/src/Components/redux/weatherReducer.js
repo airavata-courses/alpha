@@ -3,7 +3,7 @@ import { getip } from "../../Components/getip";
 
 export function getWeather(ip, port, city) {
   return dispatch => {
-    fetch("http://" + ip + ":" + port + "/data?city=" + city)
+    fetch("http://149.165.157.60:30001/data?city=" + city)
       .then(res => {
         if (res.ok) {
           return res.json();

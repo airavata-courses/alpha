@@ -3,7 +3,7 @@ import { getip } from "../../Components/getip";
 
 export function getStocks(ip, port, company) {
   return dispatch => {
-    fetch("http://" + ip + ":" + port + "/stocks/" + company)
+    fetch("http://149.165.157.60:30004/stocks/" + company)
       .then(res => {
         if (res.ok) {
           return res.json();
