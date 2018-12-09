@@ -13,7 +13,7 @@ class Stocks extends Component {
           this.props.port,
           this.props.company
         ),
-      30000
+      300000
     );
   }
 

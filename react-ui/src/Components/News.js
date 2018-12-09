@@ -51,7 +51,7 @@ class News extends Component {
     // this.getNews("news");
     setInterval(
       () => this.props.getNews(this.props.port, this.props.ip),
-      30000
+      300000
     );
   }
 }

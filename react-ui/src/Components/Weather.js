@@ -38,7 +38,7 @@ class Weather extends Component {
     setInterval(
       () =>
         this.props.getWeather(this.props.ip, this.props.port, this.props.city),
-      30000
+      300000
     );
   }
 }
