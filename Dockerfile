@@ -1,5 +1,6 @@
-FROM postgres:10.0-alpine
-  
+#FROM postgres:10.0-alpine
+FROM openjdk:8-jdk-alpine  
+#FROM alpine:edge
 EXPOSE 9101
 EXPOSE 5432
 
@@ -12,7 +13,7 @@ ENV DB_PASSWORD='p@ssw0rd'
 
 USER root
 #RUN echo "postgres ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-RUN apk add --no-cache openjdk8
+#RUN apk add --no-cache openjdk8
 RUN apk add maven --update-cache --repository http://dl-4.alpinelinux.org/alpine/edge/community/ --allow-untrusted \
         && rm -rf /var/cache/apk/*
 #RUN echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
@@ -22,8 +23,10 @@ RUN apk add maven --update-cache --repository http://dl-4.alpinelinux.org/alpine
 #    initdb /var/lib/postgresql/data &&    echo "host all  all    0.0.0.0/0  md5" >> /var/lib/postgresql/data/pg_hba.conf &&\
 #    echo "host all all ::/0 md5" >> /var/lib/postgresql/data/pg_hba.conf &&\
 #    echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf && pg_ctl start && psql < /app/dbscripts.sql 
-#USER root
-RUN mvn clean package
+#USER roo
+RUN chmod 777 /app/startdb.sh
+#RUN mvn clean package
 #ADD target/microservice-database-1.0-SNAPSHOT.jar app.jar
-
-ENTRYPOINT ["java","-jar","/app/target/microservice-database-1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["sh","startdb.sh"]
+#ENTRYPOINT ["mvn","clean","package"]
+#ENTRYPOINT ["java","-jar","/app/target/microservice-database-1.0-SNAPSHOT.jar"]
