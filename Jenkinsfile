@@ -4,7 +4,8 @@ pipeline {
   environment {
        WEATHER_API_KEY    = credentials('WEATHER_API_KEY')
        JENKINS_NODE_COOKIE = credentials('JENKINS_NODE_COOKIE')
-
+        DOCKER_USERNAME = credentials('docker_username')
+        DOCKER_PASSWORD = credentials('docker_password')
     }
   tools {
         maven 'maven'
@@ -45,7 +46,7 @@ pipeline {
             echo "y" | sudo apt install gnupg2 pass || true
             gpg2 -k || true 
             pass init "pass" || true
-            sudo docker login --username=aishwaryadhage95 --password=vebsd1987 || true
+            sudo docker login --username=DOCKER_USERNAME --password=DOCKER_PASSWORD || true
             id=$(sudo docker images | grep -E 'weather' | awk -e '{print $3}')
             sudo docker tag $id aishwaryadhage95/ms-weather:1.0.0
             sudo docker push aishwaryadhage95/ms-weather:1.0.0
