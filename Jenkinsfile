@@ -15,7 +15,7 @@ pipeline {
     }
      stage('Install dependencies') {
        steps {
-         sh 'unset PYTHONPATH && pip3 install -r requirements.txt'
+         sh 'pip install -r requirements.txt'
        }
      }
      
