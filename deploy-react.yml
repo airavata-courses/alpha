@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react
+spec:
+  selector:
+    matchLabels:
+      app: react
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: react
+    spec:
+      containers:
+        - name: react
+          imagePullPolicy: Always
+          image: aishwaryadhage95/react-ui:1.0.0
+          ports:
+            - containerPort: 3000
