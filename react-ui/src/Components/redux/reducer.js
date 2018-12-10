@@ -12,7 +12,7 @@ export const login = (username, password, ip, port) => dispatch =>
     console.log("ip", ip);
     console.log("port", port);
     // fetch("http://" + ip + ":" + port + "/login", {
-    fetch("http://149.165.157.60:30003/login", {
+    fetch("http://149.165.169.102:9101/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -25,6 +25,7 @@ export const login = (username, password, ip, port) => dispatch =>
         } else if (res.status == "401" || res.status == "403") {
           dispatch(setLoginError("Invalid User Credentials"));
         } else if (res.status == "500") {
+          console.log("rorro of server");
           dispatch(setLoginError("Server Error"));
         }
       })
@@ -43,6 +44,7 @@ export const login = (username, password, ip, port) => dispatch =>
         resolve(result);
       })
       .catch(error => {
+        console.log("error of server ...");
         dispatch(setLoginError("Server Error"));
         reject(error);
       });
@@ -101,6 +103,7 @@ function setLoginError(loginError) {
 const initialState = {
   isLoginSuccess: false,
   isLoginPending: false,
+  isLoggedIn: false,
   loginError: null,
   logout: false,
   weather: null,

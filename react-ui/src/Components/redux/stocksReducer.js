@@ -74,6 +74,7 @@ export const StocksReducer = (state = initialState, action) => {
     case SET_STOCKS:
       return {
         ...state,
+        error: false,
         stocks: action.payload
       };
 

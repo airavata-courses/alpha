@@ -11,7 +11,7 @@ class News extends Component {
     }
     {
       return (
-        <div style={{ border: "1px solid #ccc", width: "60%", margin: "auto" }}>
+        <div style={{ border: "1px solid #ccc" }}>
           <div style={{ border: "1px solid #ccc", backgroundColor: "gray" }}>
             <h3 style={{ textAlign: "center" }}>NEWS FEED: </h3>
           </div>
@@ -39,6 +39,8 @@ class News extends Component {
       );
     }
   }
+
+  // width: "60%", margin: "auto"
 
   componentDidMount() {
     // let port;

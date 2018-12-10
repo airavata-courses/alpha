@@ -16,59 +16,73 @@ import { withRouter } from "react-router-dom";
 
 class App extends Component {
   render() {
-    return (
-      <div>
-        <div class="header">
-          <a href="#default" class="logo">
-            DASHBOARD
-          </a>
-          <div class="header-right">
-            <a class="active" href="/App">
-              Home
+    if (!this.props.isLoginSuccess) {
+      this.props.history.push("/");
+      return null;
+    } else {
+      return (
+        <div>
+          <div class="header">
+            <a href="#default" class="logo">
+              DASHBOARD
             </a>
-            <button
-              onClick={() => {
-                this.props.history.push("/");
-                this.props.logout();
+            <div class="header-right">
+              <a class="active" href="/App">
+                Home
+              </a>
+              <button
+                onClick={() => {
+                  this.props.history.push("/");
+                  this.props.logout();
+                }}
+              >
+                LogOut
+              </button>
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "rows",
+              justifyContent: "center"
+            }}
+          >
+            <div
+              style={{
+                margin: "4%"
               }}
             >
-              LogOut
-            </button>
+              <Stocks />{" "}
+            </div>
+            <div
+              style={{
+                margin: "4%"
+              }}
+            >
+              <Weather />
+            </div>
+            <div
+              style={{
+                margin: "4%"
+              }}
+            >
+              <News />
+            </div>
           </div>
         </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <div
-            style={{
-              marginTop: "30px",
-              marginRight: "-50px",
-              marginLeft: "-100px"
-            }}
-          >
-            <Stocks />{" "}
-          </div>
-          <div
-            style={{
-              marginTop: "30px",
-              marginRight: "-100px",
-              marginLeft: "200px"
-            }}
-          >
-            <Weather />
-          </div>
-          <div
-            style={{
-              marginRight: "-200px",
-              marginTop: "30px",
-              marginLeft: "100px"
-            }}
-          >
-            <News />
-          </div>
-        </div>
-      </div>
-    );
+      );
+    }
   }
 }
+
+const mapStateToProps = state => {
+  // console.log("state in stocks", state.StocksReducer.stocks);
+  return {
+    isLoginSuccess: state.UserReducer.isLoginSuccess,
+    loginError: state.UserReducer.loginError
+  };
+};
+
 const mapDispathToProps = dispatch => {
   return {
     logout: () => dispatch(logout())
@@ -76,7 +90,7 @@ const mapDispathToProps = dispatch => {
 };
 
 App = connect(
-  null,
+  mapStateToProps,
   mapDispathToProps
 )(App);
 
