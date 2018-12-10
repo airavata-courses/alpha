@@ -13,15 +13,16 @@ pipeline {
         git branch: 'ms-news', url: 'https://github.com/airavata-courses/alpha.git'
       }
     }
-    // stage('Install dependencies') {
-    //   steps {
-    //     sh 'unset PYTHONPATH && pip3 install -r requirements.txt'
-    //   }
-    // }
+     stage('Install dependencies') {
+       steps {
+         sh 'unset PYTHONPATH && pip3 install -r requirements.txt'
+       }
+     }
      
     stage('CI') {
       steps {
          sh 'fuser -k 5000/tcp || true'
+        sh 'python3 -m pytest tests/'
       }
     } 
     
