@@ -1,4 +1,3 @@
-
 pipeline {
   
   agent { label 'stocks_slave'}
@@ -7,6 +6,8 @@ pipeline {
  
  environment {
         JENKINS_NODE_COOKIE = credentials('JENKINS_NODE_COOKIE')
+        DOCKER_USERNAME = credentials('docker_username')
+        DOCKER_PASSWORD = credentials('docker_password')
     }
     
   stages {
@@ -39,7 +40,7 @@ pipeline {
         sudo apt install gnupg2 pass || true
         gpg2 -k || true 
         pass init "pass" || true
-        sudo docker login --username=aishwaryadhage95 --password=vebsd1987 || true
+        sudo docker login --username=DOCKER_USERNAME --password=DOCKER_PASSWORD || true
         id=$(sudo docker images | grep -E 'stocks' | awk -e '{print $3}')
         sudo docker tag $id aishwaryadhage95/ms-stocks:1.0.0
         sudo docker push aishwaryadhage95/ms-stocks:1.0.0
