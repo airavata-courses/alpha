@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stocks
+spec:
+  selector:
+    matchLabels:
+      app: stocks
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: stocks
+    spec:
+      containers:
+        - name: stocks
+          imagePullPolicy: Always
+          image: aishwaryadhage95/ms-stocks:1.0.0
+          ports:
+            - containerPort: 8000
