@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weather
+spec:
+  selector:
+    matchLabels:
+      app: weather
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: weather
+    spec:
+      containers:
+        - name: weather
+          imagePullPolicy: Always
+          image: aishwaryadhage95/ms-weather:1.0.0
+          env:
+            - name: WEATHER_API_KEY
+              value: "9dca9959f87919bc8b8aaf9686ef2d9d"
+          ports:
+            - containerPort: 9102
