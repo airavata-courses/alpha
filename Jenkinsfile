@@ -15,14 +15,14 @@ pipeline {
     }
      stage('Install dependencies') {
        steps {
-         sh 'pip install -r requirements.txt'
+         sh 'pip3 install -r requirements.txt'
        }
      }
      
     stage('CI') {
       steps {
          sh 'fuser -k 5000/tcp || true'
-        sh 'python -m pytest tests/'
+        sh 'python3 -m pytest tests/'
       }
     } 
     
