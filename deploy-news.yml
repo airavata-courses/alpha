@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news
+spec:
+  selector:
+    matchLabels:
+      app: news
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: news
+    spec:
+      containers:
+        - name: news
+          imagePullPolicy: Always
+          image: aishwaryadhage95/ms-news:1.0.0
+          env:
+            - name: NEWS_API_KEY
+              value: "2ee42b7d4d0a4575aa73168cdf303854"
+          ports:
+            - containerPort: 5000
