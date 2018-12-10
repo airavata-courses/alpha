@@ -5,6 +5,8 @@ pipeline {
   environment {
         NEWS_API_KEY = credentials('NEWS_API_KEY')
         JENKINS_NODE_COOKIE = credentials('JENKINS_NODE_COOKIE')
+        DOCKER_USERNAME = credentials('docker_username')
+        DOCKER_PASSWORD = credentials('docker_password')
     }
   stages {
     stage('Build') {
@@ -22,7 +24,6 @@ pipeline {
     stage('CI') {
       steps {
          sh 'fuser -k 5000/tcp || true'
-       // sh 'python3 -m pytest tests/'
       }
     } 
     
@@ -35,7 +36,7 @@ pipeline {
             sudo apt install gnupg2 pass || true
             gpg2 -k || true 
             pass init "pass" || true
-            sudo docker login --username=aishwaryadhage95 --password=vebsd1987 || true
+            sudo docker login --username=DOCKER_USERNAME --password=DOCKER_PASSWORD || true
             id=$(sudo docker images | grep -E 'news' | awk -e '{print $3}')
             sudo docker tag $id aishwaryadhage95/ms-news:1.0.0
             sudo docker push aishwaryadhage95/ms-news:1.0.0
