@@ -44,7 +44,7 @@ def flask_news(api_key):
         """
         try:
             country = request.args.get("country", "us")
-            redis_client = redis.Redis(host="149.165.170.184", port=6379, db=0)
+            redis_client = redis.Redis(host="redis", port=6379, db=0)
             if redis_client.get(country) is None:
                 logging.info(f"Sending request to get news for country {country}")
                 r = requests.get(
