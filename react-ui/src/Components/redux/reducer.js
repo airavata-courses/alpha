@@ -12,7 +12,7 @@ export const login = (username, password, ip, port) => dispatch =>
     console.log("ip", ip);
     console.log("port", port);
     // fetch("http://" + ip + ":" + port + "/login", {
-    fetch("http://149.165.169.102:9101/login", {
+    fetch("http://149.165.157.60:30003/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
