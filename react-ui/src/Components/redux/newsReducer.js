@@ -75,6 +75,7 @@ export const NewsReducer = (state = initialState, action) => {
     case SET_NEWS:
       return {
         ...state,
+        error: false,
         news: action.payload
       };
     case SET_NEWS_ERROR:

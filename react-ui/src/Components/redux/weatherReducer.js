@@ -73,6 +73,7 @@ export const WeatherReducer = (state = initialState, action) => {
     case SET_WEATHER:
       return {
         ...state,
+        error: false,
         weather: action.payload
       };
 

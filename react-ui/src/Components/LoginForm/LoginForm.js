@@ -30,11 +30,11 @@ class LoginForm extends Component {
     this.props.getnewsipport();
     console.log("after news");
     this.props.getstocksipport();
+    console.log("login eorror", this.props.loginError);
   }
   render() {
     let { username, password } = this.state;
     let { isLoginPending, isLoginSuccess, loginError } = this.props;
-
     return (
       <div>
         <div>

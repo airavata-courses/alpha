@@ -20,29 +20,31 @@ export const login = (username, password, ip, port) => dispatch =>
       body: JSON.stringify({ username: username, password: password })
     })
       .then(res => {
+        console.log(res);
         if (res.ok) {
+          let result = res.json();
+          console.log("result in login state is ", result);
+          dispatch(setLoginSuccess(true));
+          dispatch(
+            setUserPreference({
+              city: result.city,
+              country: result.country,
+              company: result.company,
+              subscribedToNewsAlerts: result.subscribedToNewsAlerts,
+              subscribedToWeatherAlerts: result.subscribedToWeatherAlerts
+            })
+          );
+          resolve(result);
           return res.json();
-        } else if (res.status == "401" || res.status == "403") {
+        } else if (res.status == 401 || res.status == 403) {
+          console.log("invalid credentials");
           dispatch(setLoginError("Invalid User Credentials"));
-        } else if (res.status == "500") {
+        } else if (res.status == 500) {
           console.log("rorro of server");
           dispatch(setLoginError("Server Error"));
         }
       })
-      .then(result => {
-        console.log("result in login state is ", result);
-        dispatch(setLoginSuccess(true));
-        dispatch(
-          setUserPreference({
-            city: result.city,
-            country: result.country,
-            company: result.company,
-            subscribedToNewsAlerts: result.subscribedToNewsAlerts,
-            subscribedToWeatherAlerts: result.subscribedToWeatherAlerts
-          })
-        );
-        resolve(result);
-      })
+      // .then(result => {})
       .catch(error => {
         console.log("error of server ...");
         dispatch(setLoginError("Server Error"));
