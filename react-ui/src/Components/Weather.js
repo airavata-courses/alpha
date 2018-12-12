@@ -12,7 +12,10 @@ class Weather extends Component {
     const { weather } = this.props;
     if (this.props.error) {
       return <div>Error: {this.props.error}</div>;
-    } else if (Object.keys(this.props.weather).length === 0) {
+    } else if (
+      Object.keys(this.props.weather).length === 0 ||
+      this.props.weather == null
+    ) {
       return <div>Failed to fetch</div>;
     } else {
       return (
